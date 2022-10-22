@@ -1,11 +1,11 @@
 export class CreateAccountDto {
     userName: string;
 
-    firstName: string;
+    firstName?: string;
 
-    middleName: string;
+    middleName?: string;
 
-    lastName: string;
+    lastName?: string;
 
     role: string;
 

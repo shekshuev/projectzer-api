@@ -21,7 +21,7 @@ export class AccountsService {
         return this.accountsRepository.findOneByOrFail({ id: id });
     }
 
-    async create(createAccountDto: CreateAccountDto): Promise<Account> {
+    async create(createAccountDto: CreateAccountDto): Promise<void> {
         if (createAccountDto.password !== createAccountDto.confirmPassword) {
             throw Error("Passwords doesn't match!");
         } else if (!["admin", "interviewer"].includes(createAccountDto.role)) {
@@ -34,11 +34,11 @@ export class AccountsService {
             account.lastName = createAccountDto.lastName;
             account.role = createAccountDto.role;
             account.passwordHash = await bcrypt.hash(createAccountDto.password, 10);
-            return await this.accountsRepository.save(account);
+            await this.accountsRepository.save(account);
         }
     }
 
-    async update(id: number, updateAccountDto: UpdateAccountDto): Promise<Account> {
+    async update(id: number, updateAccountDto: UpdateAccountDto): Promise<void> {
         if (updateAccountDto.password !== updateAccountDto.confirmPassword) {
             throw Error("Passwords doesn't match!");
         } else if (updateAccountDto.role && !["admin", "interviewer"].includes(updateAccountDto.role)) {
@@ -56,7 +56,7 @@ export class AccountsService {
                     }
                 }
             }
-            return await this.accountsRepository.save(account);
+            await this.accountsRepository.save(account);
         }
     }
 

@@ -28,9 +28,10 @@ export class AccountsController {
     }
 
     @Post()
-    public async create(@Body() createAccountDto: CreateAccountDto): Promise<Account> {
+    @HttpCode(HttpStatus.CREATED)
+    public async create(@Body() createAccountDto: CreateAccountDto): Promise<void> {
         try {
-            return await this.accountsService.create(createAccountDto);
+            await this.accountsService.create(createAccountDto);
         } catch (e) {
             throw new HttpException(
                 {
@@ -43,9 +44,10 @@ export class AccountsController {
     }
 
     @Put(":id")
-    public async update(@Param("id") id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<Account> {
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async update(@Param("id") id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<void> {
         try {
-            return await this.accountsService.update(id, updateAccountDto);
+            await this.accountsService.update(id, updateAccountDto);
         } catch (e) {
             throw new HttpException(
                 {

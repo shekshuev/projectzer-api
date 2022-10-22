@@ -1,15 +1,36 @@
-import { Controller, Get, Param, Post, Put, Delete, Body, HttpException, HttpStatus, HttpCode } from "@nestjs/common";
+import {
+    Controller,
+    Get,
+    Param,
+    Query,
+    Post,
+    Put,
+    Delete,
+    Body,
+    HttpException,
+    HttpStatus,
+    HttpCode
+} from "@nestjs/common";
 import { CreateAccountDto } from "./dto/create-dto";
 import { UpdateAccountDto } from "./dto/update-dto";
 import { AccountsService } from "./accounts.service";
 import { Account } from "./account.entity";
 
+interface IAccountResultList {
+    total: number;
+    accounts: Account[];
+}
+
 @Controller("accounts")
 export class AccountsController {
     constructor(private accountsService: AccountsService) {}
     @Get()
-    public async getAll(): Promise<Account[]> {
-        return await this.accountsService.findAll();
+    public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<IAccountResultList> {
+        const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0);
+        return {
+            total: total,
+            accounts: accounts
+        };
     }
 
     @Get(":id")

@@ -13,8 +13,11 @@ export class AccountsService {
         private readonly accountsRepository: Repository<Account>
     ) {}
 
-    async findAll(): Promise<Account[]> {
-        return this.accountsRepository.find();
+    async findAll(count: number, offset: number): Promise<[Account[], number]> {
+        return this.accountsRepository.findAndCount({
+            take: count,
+            skip: offset
+        });
     }
 
     async findOne(id: number): Promise<Account> {

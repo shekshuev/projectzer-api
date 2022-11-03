@@ -5,12 +5,15 @@ import { Account } from "./account.entity";
 import { CreateAccountDto } from "./dto/create-dto";
 import { UpdateAccountDto } from "./dto/update-dto";
 import * as bcrypt from "bcrypt";
+import { InjectMapper } from "@automapper/nestjs";
+import { Mapper } from "@automapper/core";
 
 @Injectable()
 export class AccountsService {
     constructor(
         @InjectRepository(Account)
-        private readonly accountsRepository: Repository<Account>
+        private readonly accountsRepository: Repository<Account>,
+        @InjectMapper() private readonly classMapper: Mapper
     ) {}
 
     async findAll(count: number, offset: number): Promise<[Account[], number]> {
@@ -30,11 +33,7 @@ export class AccountsService {
         } else if (!["admin", "interviewer"].includes(createAccountDto.role)) {
             throw Error("Wrong account role!");
         } else {
-            const account = new Account();
-            account.userName = createAccountDto.userName;
-            account.firstName = createAccountDto.firstName;
-            account.lastName = createAccountDto.lastName;
-            account.role = createAccountDto.role;
+            const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
             account.passwordHash = await bcrypt.hash(createAccountDto.password, 10);
             await this.accountsRepository.save(account);
         }

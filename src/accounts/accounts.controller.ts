@@ -9,32 +9,38 @@ import {
     Body,
     HttpException,
     HttpStatus,
-    HttpCode
+    HttpCode,
+    UseInterceptors
 } from "@nestjs/common";
+import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
+import { Mapper } from "@automapper/core";
 import { CreateAccountDto } from "./dto/create-dto";
 import { UpdateAccountDto } from "./dto/update-dto";
 import { AccountsService } from "./accounts.service";
 import { Account } from "./account.entity";
+import { ReadAccountDto } from "./dto/read-dto";
 
 interface IAccountResultList {
     total: number;
-    accounts: Account[];
+    accounts: ReadAccountDto[];
 }
 
 @Controller("accounts")
 export class AccountsController {
-    constructor(private accountsService: AccountsService) {}
+    constructor(private accountsService: AccountsService, @InjectMapper() private readonly classMapper: Mapper) {}
+
     @Get()
     public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<IAccountResultList> {
         const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0);
         return {
             total: total,
-            accounts: accounts
+            accounts: this.classMapper.mapArray(accounts, Account, ReadAccountDto)
         };
     }
 
     @Get(":id")
-    public async getById(@Param("id") id: number): Promise<Account> {
+    @UseInterceptors(MapInterceptor(Account, ReadAccountDto))
+    public async getById(@Param("id") id: number): Promise<ReadAccountDto> {
         try {
             return await this.accountsService.findOne(id);
         } catch (e) {

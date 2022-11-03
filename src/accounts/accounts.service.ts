@@ -33,7 +33,6 @@ export class AccountsService {
             const account = new Account();
             account.userName = createAccountDto.userName;
             account.firstName = createAccountDto.firstName;
-            account.middleName = createAccountDto.middleName;
             account.lastName = createAccountDto.lastName;
             account.role = createAccountDto.role;
             account.passwordHash = await bcrypt.hash(createAccountDto.password, 10);

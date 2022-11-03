@@ -3,8 +3,6 @@ export class UpdateAccountDto {
 
     firstName?: string;
 
-    middleName?: string;
-
     lastName?: string;
 
     role?: string;

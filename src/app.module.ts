@@ -4,6 +4,8 @@ import { AppService } from "./app.service";
 import { AccountsModule } from "./accounts/accounts.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
+import { AutomapperModule } from "@automapper/nestjs";
+import { classes } from "@automapper/classes";
 
 @Module({
     imports: [
@@ -18,6 +20,9 @@ import { ConfigModule } from "@nestjs/config";
             port: Number(process.env.DATABASE_PORT),
             username: process.env.DATABASE_USERNAME,
             password: process.env.DATABASE_PASSWORD
+        }),
+        AutomapperModule.forRoot({
+            strategyInitializer: classes()
         }),
         AccountsModule
     ],

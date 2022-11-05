@@ -4,16 +4,17 @@ import { Repository } from "typeorm";
 import { Account } from "./account.entity";
 import { CreateAccountDto } from "./dto/create-dto";
 import { UpdateAccountDto } from "./dto/update-dto";
-import * as bcrypt from "bcrypt";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
+import { CryptoService } from "src/crypto/crypto.service";
 
 @Injectable()
 export class AccountsService {
     constructor(
         @InjectRepository(Account)
         private readonly accountsRepository: Repository<Account>,
-        @InjectMapper() private readonly classMapper: Mapper
+        @InjectMapper() private readonly classMapper: Mapper,
+        private readonly cryptoService: CryptoService
     ) {}
 
     async findAll(count: number, offset: number): Promise<[Account[], number]> {
@@ -27,6 +28,10 @@ export class AccountsService {
         return this.accountsRepository.findOneByOrFail({ id: id });
     }
 
+    async findOneByUserName(userName: string): Promise<Account> {
+        return this.accountsRepository.findOneByOrFail({ userName });
+    }
+
     async create(createAccountDto: CreateAccountDto): Promise<void> {
         if (createAccountDto.password !== createAccountDto.confirmPassword) {
             throw Error("Passwords doesn't match!");
@@ -34,7 +39,7 @@ export class AccountsService {
             throw Error("Wrong account role!");
         } else {
             const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
-            account.passwordHash = await bcrypt.hash(createAccountDto.password, 10);
+            account.passwordHash = await this.cryptoService.hashPassword(createAccountDto.password);
             await this.accountsRepository.save(account);
         }
     }
@@ -49,7 +54,7 @@ export class AccountsService {
             for (const prop in updateAccountDto) {
                 if (account.hasOwnProperty(prop) && !!updateAccountDto[prop]) {
                     if (prop === "password") {
-                        account.passwordHash = await bcrypt.hash(updateAccountDto.password, 10);
+                        account.passwordHash = await this.cryptoService.hashPassword(updateAccountDto.password);
                     } else if (prop === "confirmPassword") {
                         continue;
                     } else {

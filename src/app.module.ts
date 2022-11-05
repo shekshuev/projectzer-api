@@ -6,6 +6,8 @@ import { TypeOrmModule } from "@nestjs/typeorm";
 import { ConfigModule } from "@nestjs/config";
 import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
+import { AuthModule } from "./auth/auth.module";
+import { CryptoModule } from './crypto/crypto.module';
 
 @Module({
     imports: [
@@ -24,7 +26,9 @@ import { classes } from "@automapper/classes";
         AutomapperModule.forRoot({
             strategyInitializer: classes()
         }),
-        AccountsModule
+        AccountsModule,
+        AuthModule,
+        CryptoModule
     ],
     controllers: [AppController],
     providers: [AppService]

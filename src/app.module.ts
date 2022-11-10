@@ -7,7 +7,7 @@ import { ConfigModule } from "@nestjs/config";
 import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
 import { AuthModule } from "./auth/auth.module";
-import { CryptoModule } from './crypto/crypto.module';
+import { CryptoModule } from "./crypto/crypto.module";
 
 @Module({
     imports: [

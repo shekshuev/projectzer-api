@@ -26,9 +26,9 @@ export class AccountsService implements OnModuleInit {
             this.logger.log("Database has at least one admin account");
         } catch {
             const createAccountDto: CreateAccountDto = {
-                userName: "admin",
-                firstName: "",
-                lastName: "",
+                userName: process.env.ADMIN_DEFAULT_USERNAME ?? "admin",
+                firstName: process.env.ADMIN_DEFAULT_FIRSTNAME ?? "",
+                lastName: process.env.ADMIN_DEFAULT_LASTNAME ?? "",
                 role: Role.Admin,
                 password: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin",
                 confirmPassword: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin"

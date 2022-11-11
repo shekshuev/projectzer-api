@@ -20,7 +20,7 @@ import { UpdateAccountDto } from "./dto/update-dto";
 import { AccountsService } from "./accounts.service";
 import { Account } from "./account.entity";
 import { ReadAccountDto } from "./dto/read-dto";
-import { JwtAuthGuard } from "src/auth/jwt-auth.huard";
+import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
 
 interface IAccountResultList {
     total: number;

@@ -21,6 +21,9 @@ import { AccountsService } from "./accounts.service";
 import { Account } from "./account.entity";
 import { ReadAccountDto } from "./dto/read-dto";
 import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
+import { RolesGuard } from "src/auth/roles.guard";
+import { Role } from "src/enums/role.enum";
+import { Roles } from "src/decorators/roles.decorator";
 
 interface IAccountResultList {
     total: number;
@@ -32,7 +35,8 @@ export class AccountsController {
     constructor(private accountsService: AccountsService, @InjectMapper() private readonly classMapper: Mapper) {}
 
     @Get()
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<IAccountResultList> {
         const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0);
         return {
@@ -42,7 +46,8 @@ export class AccountsController {
     }
 
     @Get(":id")
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @UseInterceptors(MapInterceptor(Account, ReadAccountDto))
     public async getById(@Param("id") id: number): Promise<ReadAccountDto> {
         try {
@@ -59,7 +64,8 @@ export class AccountsController {
     }
 
     @Post()
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createAccountDto: CreateAccountDto): Promise<void> {
         try {
@@ -76,7 +82,8 @@ export class AccountsController {
     }
 
     @Put(":id")
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async update(@Param("id") id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<void> {
         try {
@@ -93,7 +100,8 @@ export class AccountsController {
     }
 
     @Delete(":id")
-    @UseGuards(JwtAuthGuard)
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async delete(@Param("id") id: number): Promise<void> {
         try {

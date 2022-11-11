@@ -10,7 +10,8 @@ import {
     HttpException,
     HttpStatus,
     HttpCode,
-    UseInterceptors
+    UseInterceptors,
+    UseGuards
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
@@ -19,6 +20,7 @@ import { UpdateAccountDto } from "./dto/update-dto";
 import { AccountsService } from "./accounts.service";
 import { Account } from "./account.entity";
 import { ReadAccountDto } from "./dto/read-dto";
+import { JwtAuthGuard } from "src/auth/jwt-auth.huard";
 
 interface IAccountResultList {
     total: number;
@@ -30,6 +32,7 @@ export class AccountsController {
     constructor(private accountsService: AccountsService, @InjectMapper() private readonly classMapper: Mapper) {}
 
     @Get()
+    @UseGuards(JwtAuthGuard)
     public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<IAccountResultList> {
         const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0);
         return {
@@ -39,6 +42,7 @@ export class AccountsController {
     }
 
     @Get(":id")
+    @UseGuards(JwtAuthGuard)
     @UseInterceptors(MapInterceptor(Account, ReadAccountDto))
     public async getById(@Param("id") id: number): Promise<ReadAccountDto> {
         try {
@@ -55,6 +59,7 @@ export class AccountsController {
     }
 
     @Post()
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.CREATED)
     public async create(@Body() createAccountDto: CreateAccountDto): Promise<void> {
         try {
@@ -71,6 +76,7 @@ export class AccountsController {
     }
 
     @Put(":id")
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async update(@Param("id") id: number, @Body() updateAccountDto: UpdateAccountDto): Promise<void> {
         try {
@@ -87,6 +93,7 @@ export class AccountsController {
     }
 
     @Delete(":id")
+    @UseGuards(JwtAuthGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async delete(@Param("id") id: number): Promise<void> {
         try {

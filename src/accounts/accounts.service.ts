@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Account } from "./account.entity";
@@ -7,15 +7,38 @@ import { UpdateAccountDto } from "./dto/update-dto";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import { CryptoService } from "src/crypto/crypto.service";
+import { Role } from "src/enums/role.enum";
 
 @Injectable()
-export class AccountsService {
+export class AccountsService implements OnModuleInit {
+    private readonly logger = new Logger(AccountsService.name);
+
     constructor(
         @InjectRepository(Account)
         private readonly accountsRepository: Repository<Account>,
         @InjectMapper() private readonly classMapper: Mapper,
         private readonly cryptoService: CryptoService
     ) {}
+
+    async onModuleInit() {
+        try {
+            await this.accountsRepository.findOneByOrFail({ role: Role.Admin });
+            this.logger.log("Database has at least one admin account");
+        } catch {
+            const createAccountDto: CreateAccountDto = {
+                userName: "admin",
+                firstName: "",
+                lastName: "",
+                role: Role.Admin,
+                password: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin",
+                confirmPassword: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin"
+            };
+            const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
+            account.passwordHash = await this.cryptoService.hashPassword(createAccountDto.password);
+            await this.accountsRepository.save(account);
+            this.logger.log(`Default admin created with password: ${createAccountDto.password}`);
+        }
+    }
 
     async findAll(count: number, offset: number): Promise<[Account[], number]> {
         return this.accountsRepository.findAndCount({

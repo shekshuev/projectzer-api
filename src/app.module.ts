@@ -8,13 +8,14 @@ import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
 import { AuthModule } from "./auth/auth.module";
 import { CryptoModule } from "./crypto/crypto.module";
+import { SurveysModule } from "./surveys/surveys.module";
 
 @Module({
     imports: [
         ConfigModule.forRoot(),
         TypeOrmModule.forRoot({
             type: (process.env.DATABASE_TYPE as any) || "sqlite",
-            database: process.env.DATABASE_NAME || "database.db",
+            database: process.env.DATABASE_NAME || "database.sqlite",
             autoLoadEntities: true,
             logging: true,
             synchronize: true,
@@ -28,7 +29,8 @@ import { CryptoModule } from "./crypto/crypto.module";
         }),
         AccountsModule,
         AuthModule,
-        CryptoModule
+        CryptoModule,
+        SurveysModule
     ],
     controllers: [AppController],
     providers: [AppService]

@@ -12,7 +12,7 @@ $ npm install
 
 ```
 DATABASE_TYPE - 'postgres' or 'sqlite', default database is sqlite
-DATABASE_NAME - name of database for postgres or filename for sqlite, default sqlite database file is 'database.db' in app folder
+DATABASE_NAME - name of database for postgres or filename for sqlite, default sqlite database file is 'database.sqlite' in app folder
 DATABASE_HOST - postgres host, doesn't required for sqlite
 DATABASE_PORT - postgres port, doesn't required for sqlite
 DATABASE_USERNAME - postgres username, doesn't required for sqlite

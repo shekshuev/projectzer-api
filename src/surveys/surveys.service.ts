@@ -5,6 +5,7 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import { CreateSurveyDTO } from "./dto/create-dto";
+import { UpdateSurveyDTO } from "./dto/update-dto";
 
 @Injectable()
 export class SurveysService {
@@ -27,6 +28,16 @@ export class SurveysService {
     async create(createSurveyDto: CreateSurveyDTO): Promise<void> {
         const survey = this.classMapper.map(createSurveyDto, CreateSurveyDTO, Survey);
         survey.createdAt = new Date();
+        await this.surveyRepository.save(survey);
+    }
+
+    async update(id: number, updateSurveyDTO: UpdateSurveyDTO): Promise<void> {
+        const survey = await this.surveyRepository.findOneByOrFail({ id: id });
+        for (const prop in updateSurveyDTO) {
+            if (survey.hasOwnProperty(prop) && !!updateSurveyDTO[prop]) {
+                survey[prop] = updateSurveyDTO[prop];
+            }
+        }
         await this.surveyRepository.save(survey);
     }
 

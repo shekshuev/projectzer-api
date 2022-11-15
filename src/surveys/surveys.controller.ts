@@ -4,6 +4,7 @@ import {
     Param,
     Query,
     Post,
+    Put,
     Delete,
     Body,
     HttpException,
@@ -68,6 +69,24 @@ export class SurveysController {
     public async create(@Body() createSurveyDTO: CreateSurveyDTO): Promise<void> {
         try {
             await this.surveysService.create(createSurveyDTO);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.FORBIDDEN,
+                    error: e.message
+                },
+                HttpStatus.FORBIDDEN
+            );
+        }
+    }
+
+    @Put(":id")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async update(@Param("id") id: number, @Body() createSurveyDTO: CreateSurveyDTO): Promise<void> {
+        try {
+            await this.surveysService.update(id, createSurveyDTO);
         } catch (e) {
             throw new HttpException(
                 {

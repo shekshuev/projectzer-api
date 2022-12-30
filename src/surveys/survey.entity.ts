@@ -28,10 +28,10 @@ export class Survey {
     description: string;
 
     @AutoMap()
-    @Column("simple-json", { nullable: true })
+    @Column("jsonb", { nullable: true })
     content: any;
 
     @AutoMap()
-    @Column("simple-json", { nullable: true })
+    @Column("jsonb", { nullable: true })
     area: FeatureCollection<Polygon>;
 }

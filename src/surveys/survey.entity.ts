@@ -1,6 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
-import { FeatureCollection, Polygon } from "geojson";
+import { FeatureCollection } from "@/geojson/feature-collection";
+import { Question } from "@/surveys/question.model";
 
 @Entity()
 export class Survey {
@@ -27,11 +28,11 @@ export class Survey {
     @Column({ nullable: true })
     description: string;
 
-    @AutoMap()
+    @AutoMap(() => [Question])
     @Column("jsonb", { nullable: true })
-    content: any;
+    questions: Question[];
 
     @AutoMap()
     @Column("jsonb", { nullable: true })
-    area: FeatureCollection<Polygon>;
+    area: FeatureCollection;
 }

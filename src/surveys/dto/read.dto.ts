@@ -1,6 +1,7 @@
 import { AutoMap } from "@automapper/classes";
-import { FeatureCollection, Polygon } from "geojson";
+import { FeatureCollection } from "@/geojson/feature-collection";
 import { ApiProperty } from "@nestjs/swagger";
+import { Question } from "@/surveys/question.model";
 
 export class ReadSurveyDTO {
     @ApiProperty()
@@ -27,11 +28,11 @@ export class ReadSurveyDTO {
     @AutoMap()
     description: string;
 
-    @ApiProperty()
-    @AutoMap()
-    content: any;
+    @ApiProperty({ type: [Question] })
+    @AutoMap(() => [Question])
+    questions: Question[];
 
-    @ApiProperty()
+    @ApiProperty({ type: FeatureCollection })
     @AutoMap()
-    area: FeatureCollection<Polygon>;
+    area: FeatureCollection;
 }

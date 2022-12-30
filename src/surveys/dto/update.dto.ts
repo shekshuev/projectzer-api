@@ -1,7 +1,9 @@
-import { IsDateString, IsOptional } from "class-validator";
+import { IsDateString, IsArray, IsOptional, ValidateNested } from "class-validator";
 import { AutoMap } from "@automapper/classes";
-import { FeatureCollection, Polygon } from "geojson";
+import { Question } from "@/surveys/question.model";
+import { FeatureCollection } from "@/geojson/feature-collection";
 import { ApiProperty } from "@nestjs/swagger";
+import { Type } from "class-transformer";
 
 export class UpdateSurveyDTO {
     @ApiProperty()
@@ -26,13 +28,18 @@ export class UpdateSurveyDTO {
     @IsOptional()
     description?: string;
 
-    @ApiProperty()
-    @AutoMap()
+    @ApiProperty({ type: [Question] })
+    @AutoMap(() => [Question])
     @IsOptional()
-    content?: any;
+    @IsArray()
+    @ValidateNested({ each: true })
+    @Type(() => Question)
+    questions?: Question[];
 
-    @ApiProperty()
+    @ApiProperty({ type: FeatureCollection })
     @AutoMap()
     @IsOptional()
-    area?: FeatureCollection<Polygon>;
+    @ValidateNested()
+    @Type(() => FeatureCollection)
+    area?: FeatureCollection;
 }

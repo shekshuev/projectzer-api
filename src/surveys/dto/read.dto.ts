@@ -1,28 +1,37 @@
-import { IsNotEmpty, IsDateString } from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection, Polygon } from "geojson";
+import { ApiProperty } from "@nestjs/swagger";
 
-export class CreateSurveyDTO {
+export class ReadSurveyDTO {
+    @ApiProperty()
     @AutoMap()
-    @IsNotEmpty()
-    @IsDateString()
+    id: number;
+
+    @ApiProperty()
+    @AutoMap()
+    createdAt: Date;
+
+    @ApiProperty()
+    @AutoMap()
     beginDate: Date;
 
+    @ApiProperty()
     @AutoMap()
-    @IsNotEmpty()
-    @IsDateString()
     endDate: Date;
 
+    @ApiProperty()
     @AutoMap()
-    @IsNotEmpty()
     title: string;
 
+    @ApiProperty()
     @AutoMap()
     description: string;
 
+    @ApiProperty()
     @AutoMap()
     content: any;
 
+    @ApiProperty()
     @AutoMap()
     area: FeatureCollection<Polygon>;
 }

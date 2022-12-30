@@ -4,8 +4,8 @@ import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
-import { CreateSurveyDTO } from "@/surveys/dto/create-dto";
-import { UpdateSurveyDTO } from "@/surveys/dto/update-dto";
+import { CreateSurveyDTO } from "@/surveys/dto/create.dto";
+import { UpdateSurveyDTO } from "@/surveys/dto/update.dto";
 
 @Injectable()
 export class SurveysService {
@@ -25,20 +25,20 @@ export class SurveysService {
         return this.surveyRepository.findOneByOrFail({ id: id });
     }
 
-    async create(createSurveyDto: CreateSurveyDTO): Promise<void> {
+    async create(createSurveyDto: CreateSurveyDTO): Promise<Survey> {
         const survey = this.classMapper.map(createSurveyDto, CreateSurveyDTO, Survey);
         survey.createdAt = new Date();
-        await this.surveyRepository.save(survey);
+        return await this.surveyRepository.save(survey);
     }
 
-    async update(id: number, updateSurveyDTO: UpdateSurveyDTO): Promise<void> {
+    async update(id: number, updateSurveyDTO: UpdateSurveyDTO): Promise<Survey> {
         const survey = await this.surveyRepository.findOneByOrFail({ id: id });
         for (const prop in updateSurveyDTO) {
             if (survey.hasOwnProperty(prop) && !!updateSurveyDTO[prop]) {
                 survey[prop] = updateSurveyDTO[prop];
             }
         }
-        await this.surveyRepository.save(survey);
+        return await this.surveyRepository.save(survey);
     }
 
     async remove(id: number): Promise<void> {

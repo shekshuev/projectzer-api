@@ -138,10 +138,10 @@ export class AccountsController {
         } catch (e) {
             throw new HttpException(
                 {
-                    status: HttpStatus.FORBIDDEN,
+                    status: HttpStatus.BAD_REQUEST,
                     error: e.message
                 },
-                HttpStatus.FORBIDDEN
+                HttpStatus.BAD_REQUEST
             );
         }
     }

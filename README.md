@@ -11,13 +11,13 @@ $ npm install
 ## Environment variables
 
 ```
-DATABASE_TYPE - 'postgres' or 'sqlite', default database is sqlite
-DATABASE_NAME - name of database for postgres or filename for sqlite, default sqlite database file is 'database.sqlite' in app folder
-DATABASE_HOST - postgres host, doesn't required for sqlite
-DATABASE_PORT - postgres port, doesn't required for sqlite
-DATABASE_USERNAME - postgres username, doesn't required for sqlite
-DATABASE_PASSWORD - postgres password, doesn't required for sqlite
-JWT_SECRET - secret key for encrypting JWT tokens, default value is 'JWT_SECRET'
+DATABASE_NAME - name of postgres database
+DATABASE_HOST - postgres host
+DATABASE_PORT - postgres port
+DATABASE_USERNAME - postgres username
+DATABASE_PASSWORD - postgres password
+JWT_SECRET - secret key for encrypting JWT tokens
+JWT_EXPIRATION - jwt lifetime (example: 1h, 24h, 30m, etc)
 ADMIN_DEFAUlt_USERNAME - username for default admin account, default value is 'admin'
 ADMIN_DEFAULT_PASSWORD - password for default admin account, default value is 'admin'
 ADMIN_DEFAULT_FIRSTNAME - first name for default admin account, default value is empty
@@ -35,17 +35,4 @@ $ npm run start:dev
 
 # production mode
 $ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
 ```

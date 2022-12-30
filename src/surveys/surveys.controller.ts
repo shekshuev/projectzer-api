@@ -15,14 +15,14 @@ import {
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
-import { CreateSurveyDTO } from "./dto/create-dto";
-import { SurveysService } from "./surveys.service";
-import { Survey } from "./survey.entity";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { RolesGuard } from "src/auth/roles.guard";
-import { Role } from "src/enums/role.enum";
-import { Roles } from "src/decorators/roles.decorator";
-import { ReadSurveyDTO } from "./dto/read-dto";
+import { CreateSurveyDTO } from "@/surveys/dto/create-dto";
+import { SurveysService } from "@/surveys/surveys.service";
+import { Survey } from "@/surveys/survey.entity";
+import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
+import { RolesGuard } from "@/auth/roles.guard";
+import { Role } from "@/enums/role.enum";
+import { Roles } from "@/decorators/roles.decorator";
+import { ReadSurveyDTO } from "@/surveys/dto/read-dto";
 
 interface ISurveyResultList {
     total: number;

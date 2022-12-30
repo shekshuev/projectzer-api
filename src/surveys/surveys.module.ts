@@ -1,10 +1,10 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { Survey } from "./survey.entity";
-import { SurveysService } from "./surveys.service";
-import { SurveysController } from "./surveys.controller";
+import { Survey } from "@/surveys/survey.entity";
+import { SurveysService } from "@/surveys/surveys.service";
+import { SurveysController } from "@/surveys/surveys.controller";
 import { AutomapperModule } from "@automapper/nestjs";
-import { SurveyProfile } from "./automapper.profile";
+import { SurveyProfile } from "@/surveys/automapper.profile";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Survey]), AutomapperModule],

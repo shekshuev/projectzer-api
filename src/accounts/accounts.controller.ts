@@ -15,15 +15,15 @@ import {
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
-import { CreateAccountDto } from "./dto/create-dto";
-import { UpdateAccountDto } from "./dto/update-dto";
-import { AccountsService } from "./accounts.service";
-import { Account } from "./account.entity";
-import { ReadAccountDto } from "./dto/read-dto";
-import { JwtAuthGuard } from "src/auth/jwt-auth.guard";
-import { RolesGuard } from "src/auth/roles.guard";
-import { Role } from "src/enums/role.enum";
-import { Roles } from "src/decorators/roles.decorator";
+import { CreateAccountDto } from "@/accounts/dto/create-dto";
+import { UpdateAccountDto } from "@/accounts/dto/update-dto";
+import { AccountsService } from "@/accounts/accounts.service";
+import { Account } from "@/accounts/account.entity";
+import { ReadAccountDto } from "@/accounts/dto/read-dto";
+import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
+import { RolesGuard } from "@/auth/roles.guard";
+import { Role } from "@/enums/role.enum";
+import { Roles } from "@/decorators/roles.decorator";
 
 interface IAccountResultList {
     total: number;

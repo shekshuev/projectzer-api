@@ -1,13 +1,14 @@
 import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
-import { Account } from "./account.entity";
-import { CreateAccountDto } from "./dto/create-dto";
-import { UpdateAccountDto } from "./dto/update-dto";
+import { Account } from "@/accounts/account.entity";
+import { CreateAccountDto } from "@/accounts/dto/create-dto";
+import { UpdateAccountDto } from "@/accounts/dto/update-dto";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
-import { CryptoService } from "src/crypto/crypto.service";
-import { Role } from "src/enums/role.enum";
+import { CryptoService } from "@/crypto/crypto.service";
+import { Role } from "@/enums/role.enum";
+import { ConfigService } from "@nestjs/config";
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
@@ -17,7 +18,8 @@ export class AccountsService implements OnModuleInit {
         @InjectRepository(Account)
         private readonly accountsRepository: Repository<Account>,
         @InjectMapper() private readonly classMapper: Mapper,
-        private readonly cryptoService: CryptoService
+        private readonly cryptoService: CryptoService,
+        private readonly configService: ConfigService
     ) {}
 
     async onModuleInit() {
@@ -26,12 +28,12 @@ export class AccountsService implements OnModuleInit {
             this.logger.log("Database has at least one admin account");
         } catch {
             const createAccountDto: CreateAccountDto = {
-                userName: process.env.ADMIN_DEFAULT_USERNAME ?? "admin",
-                firstName: process.env.ADMIN_DEFAULT_FIRSTNAME ?? "",
-                lastName: process.env.ADMIN_DEFAULT_LASTNAME ?? "",
+                userName: this.configService.get<string>("ADMIN_DEFAULT_USERNAME"),
+                firstName: this.configService.get<string>("ADMIN_DEFAULT_FIRSTNAME"),
+                lastName: this.configService.get<string>("ADMIN_DEFAULT_LASTNAME"),
                 role: Role.Admin,
-                password: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin",
-                confirmPassword: process.env.ADMIN_DEFAULT_PASSWORD ?? "admin"
+                password: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD"),
+                confirmPassword: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD")
             };
             const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
             account.passwordHash = await this.cryptoService.hashPassword(createAccountDto.password);

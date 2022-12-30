@@ -1,10 +1,10 @@
 import { AutomapperProfile, InjectMapper } from "@automapper/nestjs";
 import { createMap, forMember, ignore, Mapper } from "@automapper/core";
 import { Injectable } from "@nestjs/common";
-import { Account } from "./account.entity";
-import { ReadAccountDto } from "./dto/read-dto";
-import { CreateAccountDto } from "./dto/create-dto";
-import { UpdateAccountDto } from "./dto/update-dto";
+import { Account } from "@/accounts/account.entity";
+import { ReadAccountDto } from "@/accounts/dto/read-dto";
+import { CreateAccountDto } from "@/accounts/dto/create-dto";
+import { UpdateAccountDto } from "@/accounts/dto/update-dto";
 
 @Injectable()
 export class AccountProfile extends AutomapperProfile {

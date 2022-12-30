@@ -1,11 +1,11 @@
 import { Injectable } from "@nestjs/common";
-import { Survey } from "./survey.entity";
+import { Survey } from "@/surveys/survey.entity";
 import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
-import { CreateSurveyDTO } from "./dto/create-dto";
-import { UpdateSurveyDTO } from "./dto/update-dto";
+import { CreateSurveyDTO } from "@/surveys/dto/create-dto";
+import { UpdateSurveyDTO } from "@/surveys/dto/update-dto";
 
 @Injectable()
 export class SurveysService {

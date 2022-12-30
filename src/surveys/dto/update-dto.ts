@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsDateString } from "class-validator";
+import { IsDateString } from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection, Polygon } from "geojson";
 

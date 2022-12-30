@@ -1,28 +1,32 @@
 import { Module } from "@nestjs/common";
-import { AppController } from "./app.controller";
-import { AppService } from "./app.service";
-import { AccountsModule } from "./accounts/accounts.module";
+import { AccountsModule } from "@/accounts/accounts.module";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { ConfigModule } from "@nestjs/config";
+import { ConfigModule, ConfigService } from "@nestjs/config";
 import { AutomapperModule } from "@automapper/nestjs";
 import { classes } from "@automapper/classes";
-import { AuthModule } from "./auth/auth.module";
-import { CryptoModule } from "./crypto/crypto.module";
-import { SurveysModule } from "./surveys/surveys.module";
+import { AuthModule } from "@/auth/auth.module";
+import { CryptoModule } from "@/crypto/crypto.module";
+import { SurveysModule } from "@/surveys/surveys.module";
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
-        TypeOrmModule.forRoot({
-            type: (process.env.DATABASE_TYPE as any) || "sqlite",
-            database: process.env.DATABASE_NAME || "database.sqlite",
-            autoLoadEntities: true,
-            logging: true,
-            synchronize: true,
-            host: process.env.DATABASE_HOST,
-            port: Number(process.env.DATABASE_PORT),
-            username: process.env.DATABASE_USERNAME,
-            password: process.env.DATABASE_PASSWORD
+        ConfigModule.forRoot({
+            isGlobal: true
+        }),
+        TypeOrmModule.forRootAsync({
+            imports: [ConfigModule],
+            useFactory: async (configService: ConfigService) => ({
+                type: "postgres",
+                database: configService.get<string>("DATABASE_NAME"),
+                autoLoadEntities: true,
+                logging: true,
+                synchronize: true,
+                host: configService.get<string>("DATABASE_HOST"),
+                port: configService.get<number>("DATABASE_PORT"),
+                username: configService.get<string>("DATABASE_USERNAME"),
+                password: configService.get<string>("DATABASE_PASSWORD")
+            }),
+            inject: [ConfigService]
         }),
         AutomapperModule.forRoot({
             strategyInitializer: classes()
@@ -31,8 +35,6 @@ import { SurveysModule } from "./surveys/surveys.module";
         AuthModule,
         CryptoModule,
         SurveysModule
-    ],
-    controllers: [AppController],
-    providers: [AppService]
+    ]
 })
 export class AppModule {}

@@ -13,6 +13,7 @@ async function bootstrap() {
         .addTag("surveys")
         .addTag("accounts")
         .addTag("auth")
+        .addBearerAuth({ in: "header", type: "http" }, "Bearer")
         .build();
     const document = SwaggerModule.createDocument(app, config);
     SwaggerModule.setup("api", app, document);

@@ -2,8 +2,8 @@ import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Account } from "@/accounts/account.entity";
-import { CreateAccountDto } from "@/accounts/dto/create-dto";
-import { UpdateAccountDto } from "@/accounts/dto/update-dto";
+import { CreateAccountDTO } from "@/accounts/dto/create.dto";
+import { UpdateAccountDTO } from "@/accounts/dto/update.dto";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import { CryptoService } from "@/crypto/crypto.service";
@@ -27,7 +27,7 @@ export class AccountsService implements OnModuleInit {
             await this.accountsRepository.findOneByOrFail({ role: Role.Admin });
             this.logger.log("Database has at least one admin account");
         } catch {
-            const createAccountDto: CreateAccountDto = {
+            const createAccountDTO: CreateAccountDTO = {
                 userName: this.configService.get<string>("ADMIN_DEFAULT_USERNAME"),
                 firstName: this.configService.get<string>("ADMIN_DEFAULT_FIRSTNAME"),
                 lastName: this.configService.get<string>("ADMIN_DEFAULT_LASTNAME"),
@@ -35,10 +35,10 @@ export class AccountsService implements OnModuleInit {
                 password: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD"),
                 confirmPassword: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD")
             };
-            const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
-            account.passwordHash = await this.cryptoService.hashPassword(createAccountDto.password);
+            const account = this.classMapper.map(createAccountDTO, CreateAccountDTO, Account);
+            account.passwordHash = await this.cryptoService.hashPassword(createAccountDTO.password);
             await this.accountsRepository.save(account);
-            this.logger.log(`Default admin created with password: ${createAccountDto.password}`);
+            this.logger.log(`Default admin created with password: ${createAccountDTO.password}`);
         }
     }
 
@@ -57,37 +57,37 @@ export class AccountsService implements OnModuleInit {
         return this.accountsRepository.findOneByOrFail({ userName });
     }
 
-    async create(createAccountDto: CreateAccountDto): Promise<void> {
-        if (createAccountDto.password !== createAccountDto.confirmPassword) {
+    async create(createAccountDTO: CreateAccountDTO): Promise<Account> {
+        if (createAccountDTO.password !== createAccountDTO.confirmPassword) {
             throw Error("Passwords doesn't match!");
-        } else if (!["admin", "interviewer"].includes(createAccountDto.role)) {
+        } else if (!["admin", "interviewer"].includes(createAccountDTO.role)) {
             throw Error("Wrong account role!");
         } else {
-            const account = this.classMapper.map(createAccountDto, CreateAccountDto, Account);
-            account.passwordHash = await this.cryptoService.hashPassword(createAccountDto.password);
-            await this.accountsRepository.save(account);
+            const account = this.classMapper.map(createAccountDTO, CreateAccountDTO, Account);
+            account.passwordHash = await this.cryptoService.hashPassword(createAccountDTO.password);
+            return await this.accountsRepository.save(account);
         }
     }
 
-    async update(id: number, updateAccountDto: UpdateAccountDto): Promise<void> {
-        if (updateAccountDto.password !== updateAccountDto.confirmPassword) {
+    async update(id: number, updateAccountDTO: UpdateAccountDTO): Promise<Account> {
+        if (updateAccountDTO.password !== updateAccountDTO.confirmPassword) {
             throw Error("Passwords doesn't match!");
-        } else if (updateAccountDto.role && !["admin", "interviewer"].includes(updateAccountDto.role)) {
+        } else if (updateAccountDTO.role && !["admin", "interviewer"].includes(updateAccountDTO.role)) {
             throw Error("Wrong account role!");
         } else {
             const account = await this.accountsRepository.findOneByOrFail({ id: id });
-            for (const prop in updateAccountDto) {
-                if (account.hasOwnProperty(prop) && !!updateAccountDto[prop]) {
+            for (const prop in updateAccountDTO) {
+                if (account.hasOwnProperty(prop) && !!updateAccountDTO[prop]) {
                     if (prop === "password") {
-                        account.passwordHash = await this.cryptoService.hashPassword(updateAccountDto.password);
+                        account.passwordHash = await this.cryptoService.hashPassword(updateAccountDTO.password);
                     } else if (prop === "confirmPassword") {
                         continue;
                     } else {
-                        account[prop] = updateAccountDto[prop];
+                        account[prop] = updateAccountDTO[prop];
                     }
                 }
             }
-            await this.accountsRepository.save(account);
+            return await this.accountsRepository.save(account);
         }
     }
 

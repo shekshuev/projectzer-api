@@ -24,12 +24,14 @@ import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
 import { RolesGuard } from "@/auth/roles.guard";
 import { Role } from "@/enums/role.enum";
 import { Roles } from "@/decorators/roles.decorator";
+import { ApiTags } from "@nestjs/swagger";
 
 interface IAccountResultList {
     total: number;
     accounts: ReadAccountDto[];
 }
 
+@ApiTags("accounts")
 @Controller("accounts")
 export class AccountsController {
     constructor(private accountsService: AccountsService, @InjectMapper() private readonly classMapper: Mapper) {}

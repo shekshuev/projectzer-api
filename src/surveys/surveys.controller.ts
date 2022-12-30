@@ -23,12 +23,14 @@ import { RolesGuard } from "@/auth/roles.guard";
 import { Role } from "@/enums/role.enum";
 import { Roles } from "@/decorators/roles.decorator";
 import { ReadSurveyDTO } from "@/surveys/dto/read-dto";
+import { ApiTags } from "@nestjs/swagger";
 
 interface ISurveyResultList {
     total: number;
     surveys: ReadSurveyDTO[];
 }
 
+@ApiTags("surveys")
 @Controller("surveys")
 export class SurveysController {
     constructor(private surveysService: SurveysService, @InjectMapper() private readonly classMapper: Mapper) {}

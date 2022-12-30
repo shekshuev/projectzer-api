@@ -2,7 +2,8 @@ import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { AccountsService } from "@/accounts/accounts.service";
 import { CryptoService } from "@/crypto/crypto.service";
 import { JwtService } from "@nestjs/jwt";
-import { SigInDto } from "@/auth/dto/signin.dto";
+import { SigInDTO } from "@/auth/dto/signin.dto";
+import { ReadTokenDTO } from "@/auth/dto/read.dto";
 
 @Injectable()
 export class AuthService {
@@ -12,10 +13,10 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async signIn(signInDto: SigInDto) {
+    async signIn(signInDTO: SigInDTO): Promise<ReadTokenDTO> {
         try {
-            const user = await this.accountService.findOneByUserName(signInDto.userName);
-            if (await this.cryptoService.checkPasswordHash(signInDto.password, user.passwordHash)) {
+            const user = await this.accountService.findOneByUserName(signInDTO.userName);
+            if (await this.cryptoService.checkPasswordHash(signInDTO.password, user.passwordHash)) {
                 return {
                     accessToken: this.jwtService.sign({ username: user.userName, role: user.role })
                 };

@@ -25,7 +25,11 @@ import { Role } from "@/enums/role.enum";
 import { Roles } from "@/decorators/roles.decorator";
 import { ReadSurveyDTO } from "@/surveys/dto/read.dto";
 import { ReadSurveyListDTO } from "@/surveys/dto/read-list.dto";
+import { ReadFilledSurveyListDTO } from "@/surveys/dto/read-filled-list.dto";
 import { ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { FilledSurvey } from "@/surveys/survey-filled.entity";
+import { ReadFilledSurveyDTO } from "@/surveys/dto/read-filled.dto";
+import { CreateFilledSurveyDTO } from "./dto/create-filled.dto";
 
 @ApiTags("surveys")
 @ApiBearerAuth("Bearer")
@@ -36,7 +40,7 @@ export class SurveysController {
 
     @ApiResponse({
         status: 200,
-        description: "Object with list of surveys and surveys total count",
+        description: "Object with list of surveys and their total count",
         type: ReadSurveyListDTO
     })
     @Get()
@@ -47,6 +51,25 @@ export class SurveysController {
         return {
             total: total,
             surveys: this.classMapper.mapArray(surveys, Survey, ReadSurveyDTO)
+        };
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: "Object with list of filled surveys and their total count",
+        type: ReadSurveyListDTO
+    })
+    @Get("/filled")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    public async getAllFilled(
+        @Query("count") count: number,
+        @Query("offset") offset: number
+    ): Promise<ReadFilledSurveyListDTO> {
+        const [surveys, total] = await this.surveysService.findAllFilled(count || 10, offset || 0);
+        return {
+            total: total,
+            surveys: this.classMapper.mapArray(surveys, FilledSurvey, ReadFilledSurveyDTO)
         };
     }
 
@@ -75,6 +98,30 @@ export class SurveysController {
     }
 
     @ApiResponse({
+        status: 200,
+        description: "Survey object",
+        type: ReadSurveyDTO
+    })
+    @ApiResponse({ status: 404, description: "No filled survey with provided id" })
+    @Get("/filled/:id")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(MapInterceptor(Survey, ReadFilledSurveyDTO))
+    public async getFilledById(@Param("id") id: number): Promise<ReadFilledSurveyDTO> {
+        try {
+            return await this.surveysService.findOneFilled(id);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.NOT_FOUND,
+                    error: e.message
+                },
+                HttpStatus.NOT_FOUND
+            );
+        }
+    }
+
+    @ApiResponse({
         status: 201,
         description: "Survey created",
         type: ReadSurveyDTO
@@ -88,6 +135,31 @@ export class SurveysController {
     public async create(@Body() createSurveyDTO: CreateSurveyDTO): Promise<ReadSurveyDTO> {
         try {
             return await this.surveysService.create(createSurveyDTO);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: e.message
+                },
+                HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @ApiResponse({
+        status: 201,
+        description: "Filled survey created",
+        type: ReadSurveyDTO
+    })
+    @ApiResponse({ status: 400, description: "Wrong body" })
+    @Post("/filled")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @HttpCode(HttpStatus.CREATED)
+    @UseInterceptors(MapInterceptor(Survey, ReadSurveyDTO))
+    public async createFilled(@Body() createFilledSurveyDTO: CreateFilledSurveyDTO): Promise<ReadFilledSurveyDTO> {
+        try {
+            return await this.surveysService.createFilled(createFilledSurveyDTO);
         } catch (e) {
             throw new HttpException(
                 {
@@ -133,6 +205,26 @@ export class SurveysController {
     public async delete(@Param("id") id: number): Promise<void> {
         try {
             await this.surveysService.remove(id);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: e.message
+                },
+                HttpStatus.BAD_REQUEST
+            );
+        }
+    }
+
+    @ApiResponse({ status: 204, description: "Filled survey deleted" })
+    @ApiResponse({ status: 404, description: "No filled survey with provided id" })
+    @Delete("filled/:id")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @HttpCode(HttpStatus.NO_CONTENT)
+    public async deleteFilled(@Param("id") id: number): Promise<void> {
+        try {
+            await this.surveysService.removeFilled(id);
         } catch (e) {
             throw new HttpException(
                 {

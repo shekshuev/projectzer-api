@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
 import { Survey } from "@/surveys/survey.entity";
 import { FilledSurvey } from "@/surveys/survey-filled.entity";
-import { Repository, EntityNotFoundError } from "typeorm";
+import { Repository } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
@@ -9,15 +9,14 @@ import { CreateSurveyDTO } from "@/surveys/dto/create.dto";
 import { CreateFilledSurveyDTO } from "@/surveys/dto/create-filled.dto";
 import { UpdateSurveyDTO } from "@/surveys/dto/update.dto";
 import { FormsService } from "@/forms/forms.service";
-import { Form } from "@/forms/form.entity";
 
 @Injectable()
 export class SurveysService {
     constructor(
         @InjectRepository(Survey) private readonly surveyRepository: Repository<Survey>,
-        @InjectRepository(Form) private readonly formsRepository: Repository<Form>,
         @InjectRepository(FilledSurvey) private readonly filledSurveyRepository: Repository<FilledSurvey>,
-        @InjectMapper() private readonly classMapper: Mapper
+        @InjectMapper() private readonly classMapper: Mapper,
+        private readonly formService: FormsService
     ) {}
 
     async findAll(count: number, offset: number): Promise<[Survey[], number]> {
@@ -43,7 +42,7 @@ export class SurveysService {
     }
 
     async create(createSurveyDto: CreateSurveyDTO): Promise<Survey> {
-        await this.formsRepository.findOneByOrFail({ id: createSurveyDto.formId });
+        await this.formService.findOne(createSurveyDto.formId);
         const survey = this.classMapper.map(createSurveyDto, CreateSurveyDTO, Survey);
         survey.createdAt = new Date();
         return await this.surveyRepository.save(survey);
@@ -57,7 +56,7 @@ export class SurveysService {
 
     async update(id: number, updateSurveyDTO: UpdateSurveyDTO): Promise<Survey> {
         if (updateSurveyDTO.formId) {
-            await this.formsRepository.findOneByOrFail({ id: updateSurveyDTO.formId });
+            await this.formService.findOne(updateSurveyDTO.formId);
         }
         const survey = await this.surveyRepository.findOneByOrFail({ id: id });
         for (const prop in updateSurveyDTO) {

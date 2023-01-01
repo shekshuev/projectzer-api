@@ -1,7 +1,6 @@
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection } from "@/geojson/feature-collection";
 import { ApiProperty } from "@nestjs/swagger";
-import { Question } from "@/surveys/question.model";
 
 export class ReadSurveyDTO {
     @ApiProperty()
@@ -28,9 +27,9 @@ export class ReadSurveyDTO {
     @AutoMap()
     description: string;
 
-    @ApiProperty({ type: [Question] })
-    @AutoMap(() => [Question])
-    questions: Question[];
+    @ApiProperty()
+    @AutoMap()
+    formId: number;
 
     @ApiProperty({ type: FeatureCollection })
     @AutoMap()

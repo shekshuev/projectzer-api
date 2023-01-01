@@ -1,7 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection } from "@/geojson/feature-collection";
-import { Question } from "@/surveys/question.model";
+import { Form } from "@/forms/form.entity";
 
 @Entity()
 export class Survey {
@@ -28,9 +28,14 @@ export class Survey {
     @Column({ nullable: true })
     description: string;
 
-    @AutoMap(() => [Question])
-    @Column("jsonb", { nullable: true })
-    questions: Question[];
+    @AutoMap()
+    @OneToOne(() => Form)
+    @JoinColumn()
+    form: Form;
+
+    @AutoMap()
+    @Column({ nullable: false })
+    formId: number;
 
     @AutoMap()
     @Column("jsonb", { nullable: true })

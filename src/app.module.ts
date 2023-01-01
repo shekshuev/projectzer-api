@@ -7,6 +7,7 @@ import { classes } from "@automapper/classes";
 import { AuthModule } from "@/auth/auth.module";
 import { CryptoModule } from "@/crypto/crypto.module";
 import { SurveysModule } from "@/surveys/surveys.module";
+import { FormsModule } from "@/forms/forms.module";
 
 @Module({
     imports: [
@@ -34,7 +35,8 @@ import { SurveysModule } from "@/surveys/surveys.module";
         AccountsModule,
         AuthModule,
         CryptoModule,
-        SurveysModule
+        SurveysModule,
+        FormsModule
     ]
 })
 export class AppModule {}

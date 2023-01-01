@@ -10,6 +10,7 @@ async function bootstrap() {
         .setTitle("ProjectZero API")
         .setDescription("The API description of system for conducting sociological surveys")
         .setVersion("1.0")
+        .addTag("forms")
         .addTag("surveys")
         .addTag("accounts")
         .addTag("auth")

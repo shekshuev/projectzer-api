@@ -29,7 +29,7 @@ import { ReadFilledSurveyListDTO } from "@/surveys/dto/read-filled-list.dto";
 import { ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 import { FilledSurvey } from "@/surveys/survey-filled.entity";
 import { ReadFilledSurveyDTO } from "@/surveys/dto/read-filled.dto";
-import { CreateFilledSurveyDTO } from "./dto/create-filled.dto";
+import { CreateFilledSurveyDTO } from "@/surveys/dto/create-filled.dto";
 
 @ApiTags("surveys")
 @ApiBearerAuth("Bearer")

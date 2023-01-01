@@ -1,10 +1,10 @@
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
-import { FilledQuestion } from "@/surveys/filled-question.model";
+import { ResultQuestion } from "@/results/result-question.model";
 import { Type } from "class-transformer";
 import { Feature } from "@/geojson/feature";
 
-export class ReadFilledSurveyDTO {
+export class ReadResultDTO {
     @ApiProperty()
     @AutoMap()
     id: number;
@@ -30,8 +30,8 @@ export class ReadFilledSurveyDTO {
     @Type(() => Feature)
     point: Feature;
 
-    @ApiProperty({ type: [FilledQuestion] })
-    @AutoMap(() => [FilledQuestion])
-    @Type(() => FilledQuestion)
-    questions: FilledQuestion[];
+    @ApiProperty({ type: [ResultQuestion] })
+    @AutoMap(() => [ResultQuestion])
+    @Type(() => ResultQuestion)
+    questions: ResultQuestion[];
 }

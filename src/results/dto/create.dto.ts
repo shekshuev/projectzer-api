@@ -1,11 +1,11 @@
 import { IsNotEmpty, IsDefined, IsDateString, IsBoolean, ValidateNested, IsNumber, IsArray } from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
-import { FilledQuestion } from "@/surveys/filled-question.model";
+import { ResultQuestion } from "@/results/result-question.model";
 import { Type } from "class-transformer";
 import { Feature } from "@/geojson/feature";
 
-export class CreateFilledSurveyDTO {
+export class CreateResultDTO {
     @ApiProperty()
     @AutoMap()
     @IsNumber()
@@ -35,10 +35,10 @@ export class CreateFilledSurveyDTO {
     @Type(() => Feature)
     point: Feature;
 
-    @ApiProperty({ type: [FilledQuestion] })
-    @AutoMap(() => [FilledQuestion])
+    @ApiProperty({ type: [ResultQuestion] })
+    @AutoMap(() => [ResultQuestion])
     @IsArray()
     @ValidateNested({ each: true })
-    @Type(() => FilledQuestion)
-    questions: FilledQuestion[];
+    @Type(() => ResultQuestion)
+    questions: ResultQuestion[];
 }

@@ -5,7 +5,7 @@ import { Type } from "class-transformer";
 import { Question } from "@/surveys/question.model";
 import { Answer } from "@/surveys/answer.model";
 
-export class FilledQuestion {
+export class ResultQuestion {
     @ApiProperty({ type: Question })
     @AutoMap()
     @IsDefined()

@@ -8,6 +8,7 @@ import { AuthModule } from "@/auth/auth.module";
 import { CryptoModule } from "@/crypto/crypto.module";
 import { SurveysModule } from "@/surveys/surveys.module";
 import { FormsModule } from "@/forms/forms.module";
+import { ResultsModule } from "@/results/results.module";
 
 @Module({
     imports: [
@@ -36,7 +37,8 @@ import { FormsModule } from "@/forms/forms.module";
         AuthModule,
         CryptoModule,
         SurveysModule,
-        FormsModule
+        FormsModule,
+        ResultsModule
     ]
 })
 export class AppModule {}

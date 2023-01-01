@@ -2,10 +2,10 @@ import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "ty
 import { AutoMap } from "@automapper/classes";
 import { Survey } from "@/surveys/survey.entity";
 import { Feature } from "@/geojson/feature";
-import { FilledQuestion } from "@/surveys/filled-question.model";
+import { ResultQuestion } from "@/results/result-question.model";
 
 @Entity()
-export class FilledSurvey {
+export class Result {
     @AutoMap()
     @PrimaryGeneratedColumn()
     id: number;
@@ -38,7 +38,7 @@ export class FilledSurvey {
     @Column({ nullable: false })
     completed: boolean;
 
-    @AutoMap(() => [FilledQuestion])
+    @AutoMap(() => [ResultQuestion])
     @Column("jsonb", { nullable: false })
-    questions: FilledQuestion[];
+    questions: ResultQuestion[];
 }

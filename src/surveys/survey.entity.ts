@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection } from "@/geojson/feature-collection";
 import { Form } from "@/forms/form.entity";
@@ -29,7 +29,7 @@ export class Survey {
     description: string;
 
     @AutoMap()
-    @OneToOne(() => Form)
+    @ManyToOne(() => Form)
     @JoinColumn()
     form: Form;
 

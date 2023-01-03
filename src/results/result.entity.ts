@@ -3,6 +3,7 @@ import { AutoMap } from "@automapper/classes";
 import { Survey } from "@/surveys/survey.entity";
 import { Feature } from "@/geojson/feature";
 import { ResultQuestion } from "@/results/result-question.model";
+import { Account } from "@/accounts/account.entity";
 
 @Entity()
 export class Result {
@@ -18,6 +19,15 @@ export class Result {
     @AutoMap()
     @Column({ nullable: false })
     surveyId: number;
+
+    @AutoMap()
+    @ManyToOne(() => Account)
+    @JoinColumn()
+    account: Account;
+
+    @AutoMap()
+    @Column({ nullable: false })
+    accountId: number;
 
     @Column({ nullable: false })
     createdAt: Date;

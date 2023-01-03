@@ -10,7 +10,8 @@ import {
     HttpStatus,
     HttpCode,
     UseInterceptors,
-    UseGuards
+    UseGuards,
+    Request
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
@@ -83,8 +84,9 @@ export class ResultsController {
     @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(MapInterceptor(Result, ReadResultDTO))
-    public async create(@Body() createResultDTO: CreateResultDTO): Promise<ReadResultDTO> {
+    public async create(@Body() createResultDTO: CreateResultDTO, @Request() request: any): Promise<ReadResultDTO> {
         try {
+            createResultDTO.accountId = request?.user?.id;
             return await this.resultsService.create(createResultDTO);
         } catch (e) {
             throw new HttpException(

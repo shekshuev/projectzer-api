@@ -10,7 +10,7 @@ import { CryptoService } from "@/crypto/crypto.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Account]), ConfigModule, AutomapperModule],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, CryptoService],
     controllers: [AccountsController],
     providers: [AccountsService, AccountProfile, CryptoService]
 })

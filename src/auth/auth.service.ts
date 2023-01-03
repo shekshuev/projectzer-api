@@ -18,7 +18,7 @@ export class AuthService {
             const user = await this.accountService.findOneByUserName(signInDTO.userName);
             if (await this.cryptoService.checkPasswordHash(signInDTO.password, user.passwordHash)) {
                 return {
-                    accessToken: this.jwtService.sign({ username: user.userName, role: user.role })
+                    accessToken: this.jwtService.sign({ id: user.id, username: user.userName, role: user.role })
                 };
             } else {
                 throw new UnauthorizedException("Wrong password");

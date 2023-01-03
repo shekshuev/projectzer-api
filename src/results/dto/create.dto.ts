@@ -1,4 +1,13 @@
-import { IsNotEmpty, IsDefined, IsDateString, IsBoolean, ValidateNested, IsNumber, IsArray } from "class-validator";
+import {
+    IsNotEmpty,
+    IsDefined,
+    IsDateString,
+    IsBoolean,
+    ValidateNested,
+    IsNumber,
+    IsArray,
+    IsOptional
+} from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
 import { ResultQuestion } from "@/results/result-question.model";
@@ -10,6 +19,10 @@ export class CreateResultDTO {
     @AutoMap()
     @IsNumber()
     surveyId: number;
+
+    @AutoMap()
+    @IsOptional()
+    accountId?: number;
 
     @ApiProperty()
     @AutoMap()

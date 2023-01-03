@@ -15,6 +15,10 @@ export class ReadResultDTO {
 
     @ApiProperty()
     @AutoMap()
+    accountId: number;
+
+    @ApiProperty()
+    @AutoMap()
     beginDate: Date;
 
     @ApiProperty()

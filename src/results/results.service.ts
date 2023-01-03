@@ -6,13 +6,15 @@ import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import { CreateResultDTO } from "@/results/dto/create.dto";
 import { SurveysService } from "@/surveys/surveys.service";
+import { AccountsService } from "@/accounts/accounts.service";
 
 @Injectable()
 export class ResultsService {
     constructor(
         @InjectRepository(Result) private readonly resultsRepository: Repository<Result>,
         @InjectMapper() private readonly classMapper: Mapper,
-        private readonly surveyService: SurveysService
+        private readonly surveyService: SurveysService,
+        private readonly accountService: AccountsService
     ) {}
 
     async findAll(count: number, offset: number): Promise<[Result[], number]> {
@@ -28,6 +30,7 @@ export class ResultsService {
 
     async create(createResultDTO: CreateResultDTO): Promise<Result> {
         await this.surveyService.findOne(createResultDTO.surveyId);
+        await this.accountService.findOne(createResultDTO.accountId);
         const result = this.classMapper.map(createResultDTO, CreateResultDTO, Result);
         result.createdAt = new Date();
         return await this.resultsRepository.save(result);

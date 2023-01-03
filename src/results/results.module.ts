@@ -8,11 +8,13 @@ import { SurveysModule } from "@/surveys/surveys.module";
 import { ResultsProfile } from "@/results/automapper.profile";
 import { AutomapperModule } from "@automapper/nestjs";
 import { SurveysService } from "@/surveys/surveys.service";
+import { AccountsModule } from "@/accounts/accounts.module";
+import { AccountsService } from "@/accounts/accounts.service";
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Result, Survey]), AutomapperModule, SurveysModule],
+    imports: [TypeOrmModule.forFeature([Result, Survey]), AutomapperModule, SurveysModule, AccountsModule],
     exports: [TypeOrmModule],
-    providers: [ResultsService, ResultsProfile, SurveysService],
+    providers: [ResultsService, ResultsProfile, SurveysService, AccountsService],
     controllers: [ResultsController]
 })
 export class ResultsModule {}

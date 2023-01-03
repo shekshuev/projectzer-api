@@ -31,6 +31,10 @@ export class ReadSurveyDTO {
     @AutoMap()
     formId: number;
 
+    @ApiProperty()
+    @AutoMap()
+    formsCount: number;
+
     @ApiProperty({ type: FeatureCollection })
     @AutoMap()
     area: FeatureCollection;

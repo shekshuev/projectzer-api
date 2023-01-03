@@ -29,6 +29,10 @@ export class Survey {
     description: string;
 
     @AutoMap()
+    @Column({ nullable: false, default: 0 })
+    formsCount: number;
+
+    @AutoMap()
     @ManyToOne(() => Form)
     @JoinColumn()
     form: Form;

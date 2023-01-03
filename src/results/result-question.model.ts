@@ -2,8 +2,8 @@ import { AutoMap } from "@automapper/classes";
 import { ValidateNested, IsOptional, IsDefined } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { Question } from "@/surveys/question.model";
-import { Answer } from "@/surveys/answer.model";
+import { Question } from "@/forms/question.model";
+import { Answer } from "@/forms/answer.model";
 
 export class ResultQuestion {
     @ApiProperty({ type: Question })

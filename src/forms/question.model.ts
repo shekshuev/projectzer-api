@@ -1,7 +1,7 @@
 import { AutoMap } from "@automapper/classes";
 import { QuestionType } from "@/enums/question.enum";
 import { IsNotEmpty, IsIn, IsBoolean, IsArray, ArrayMinSize, ValidateNested } from "class-validator";
-import { Answer } from "@/surveys/answer.model";
+import { Answer } from "@/forms/answer.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 

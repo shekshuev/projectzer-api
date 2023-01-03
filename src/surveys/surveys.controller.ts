@@ -67,6 +67,33 @@ export class SurveysController {
 
     @ApiResponse({
         status: 200,
+        description: "Object with list of available surveys and their total count for interviewer",
+        type: ReadSurveyListDTO
+    })
+    @Get("/available")
+    @Roles(Role.Interviewer)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    public async getAvailable(
+        @Query("longitude") longitude: number,
+        @Query("latitude") latitude: number
+    ): Promise<ReadSurveyListDTO> {
+        const filterDTO = {
+            id: null,
+            title: null,
+            description: null,
+            latitude,
+            longitude,
+            available: true
+        };
+        const [surveys, total] = await this.surveysService.findAll(-1, -1, filterDTO);
+        return {
+            total: total,
+            surveys: this.classMapper.mapArray(surveys, Survey, ReadSurveyDTO)
+        };
+    }
+
+    @ApiResponse({
+        status: 200,
         description: "Survey object",
         type: ReadSurveyDTO
     })

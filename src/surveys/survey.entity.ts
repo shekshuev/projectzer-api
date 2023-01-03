@@ -1,7 +1,8 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection } from "@/geojson/feature-collection";
 import { Form } from "@/forms/form.entity";
+import { Result } from "@/results/result.entity";
 
 @Entity()
 export class Survey {
@@ -44,4 +45,7 @@ export class Survey {
     @AutoMap()
     @Column("jsonb", { nullable: true })
     area: FeatureCollection;
+
+    @OneToMany(() => Result, result => result.survey)
+    results: Result[];
 }

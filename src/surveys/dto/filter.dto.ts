@@ -1,6 +1,6 @@
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
-import { IsOptional, IsNumber } from "class-validator";
+import { IsOptional, IsNumber, IsBoolean } from "class-validator";
 
 export class FilterSurveyDTO {
     @ApiProperty()
@@ -29,4 +29,10 @@ export class FilterSurveyDTO {
     @IsOptional()
     @IsNumber()
     longitude?: number;
+
+    @ApiProperty()
+    @AutoMap()
+    @IsOptional()
+    @IsBoolean()
+    available?: boolean;
 }

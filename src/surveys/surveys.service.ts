@@ -21,7 +21,7 @@ export class SurveysService {
     async findAll(count: number, offset: number, filterDTO?: FilterSurveyDTO): Promise<[Survey[], number]> {
         if (filterDTO) {
             const filter = {};
-            const { latitude, longitude, ...rest } = filterDTO;
+            const { latitude, longitude, available, ...rest } = filterDTO;
             for (const prop in rest) {
                 if (!!filterDTO[prop]) {
                     if (["id"].includes(prop) && filterDTO[prop]) {
@@ -31,12 +31,28 @@ export class SurveysService {
                     }
                 }
             }
-            let [surveys, total] = await this.surveyRepository
-                .createQueryBuilder()
-                .where(filter)
-                .take(count)
-                .skip(offset)
-                .getManyAndCount();
+            let builder = this.surveyRepository.createQueryBuilder("survey").where(filter);
+            if (available) {
+                builder = builder.andWhere(qb => {
+                    const subQuery = qb
+                        .subQuery()
+                        .select("s.id")
+                        .from("survey", "s")
+                        .leftJoin("result", "r", "s.id=r.surveyId")
+                        .groupBy("s.id, s.formsCount")
+                        .having("COUNT(*) < s.formsCount")
+                        .getQuery();
+                    return "survey.id IN " + subQuery;
+                });
+            }
+            if (count > 0) {
+                builder = builder.take(count);
+            }
+            if (offset > 0) {
+                builder = builder.skip(offset);
+            }
+
+            let [surveys, total] = await builder.getManyAndCount();
             if (!isNaN(latitude) && !isNaN(longitude)) {
                 surveys = surveys?.filter(survey => {
                     const point = turf.point([longitude, latitude]);

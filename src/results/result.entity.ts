@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToOne, JoinColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { Survey } from "@/surveys/survey.entity";
 import { Feature } from "@/geojson/feature";
@@ -11,7 +11,7 @@ export class Result {
     id: number;
 
     @AutoMap()
-    @OneToOne(() => Survey)
+    @ManyToOne(() => Survey)
     @JoinColumn()
     survey: Survey;
 

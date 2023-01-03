@@ -78,13 +78,9 @@ export class AccountsService implements OnModuleInit {
             const account = await this.accountsRepository.findOneByOrFail({ id: id });
             for (const prop in updateAccountDTO) {
                 if (account.hasOwnProperty(prop) && !!updateAccountDTO[prop]) {
-                    if (prop === "password") {
-                        account.passwordHash = await this.cryptoService.hashPassword(updateAccountDTO.password);
-                    } else if (prop === "confirmPassword") {
-                        continue;
-                    } else {
-                        account[prop] = updateAccountDTO[prop];
-                    }
+                    account[prop] = updateAccountDTO[prop];
+                } else if (prop === "password") {
+                    account.passwordHash = await this.cryptoService.hashPassword(updateAccountDTO.password);
                 }
             }
             return await this.accountsRepository.save(account);

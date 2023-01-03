@@ -3,7 +3,7 @@ import { ValidateNested, IsOptional, IsDefined } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { Question } from "@/forms/question.model";
-import { Answer } from "@/forms/answer.model";
+import { ResultAnswer } from "@/results/result-answer.model";
 
 export class ResultQuestion {
     @ApiProperty({ type: Question })
@@ -13,12 +13,12 @@ export class ResultQuestion {
     @Type(() => Question)
     question: Question;
 
-    @ApiProperty({ type: Answer })
+    @ApiProperty({ type: ResultAnswer })
     @AutoMap()
     @IsOptional()
     @ValidateNested()
-    @Type(() => Answer)
-    selectedAnswer: Answer;
+    @Type(() => ResultAnswer)
+    selectedAnswer: ResultAnswer;
 
     @ApiProperty()
     @AutoMap()

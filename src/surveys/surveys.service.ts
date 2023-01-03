@@ -1,12 +1,14 @@
 import { Injectable } from "@nestjs/common";
 import { Survey } from "@/surveys/survey.entity";
-import { Repository } from "typeorm";
+import { Repository, ILike } from "typeorm";
 import { InjectRepository } from "@nestjs/typeorm";
 import { InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
 import { CreateSurveyDTO } from "@/surveys/dto/create.dto";
 import { UpdateSurveyDTO } from "@/surveys/dto/update.dto";
+import { FilterSurveyDTO } from "@/surveys/dto/filter.dto";
 import { FormsService } from "@/forms/forms.service";
+import * as turf from "@turf/turf";
 
 @Injectable()
 export class SurveysService {
@@ -16,11 +18,45 @@ export class SurveysService {
         private readonly formService: FormsService
     ) {}
 
-    async findAll(count: number, offset: number): Promise<[Survey[], number]> {
-        return this.surveyRepository.findAndCount({
-            take: count,
-            skip: offset
-        });
+    async findAll(count: number, offset: number, filterDTO?: FilterSurveyDTO): Promise<[Survey[], number]> {
+        if (filterDTO) {
+            const filter = {};
+            const { latitude, longitude, ...rest } = filterDTO;
+            for (const prop in rest) {
+                if (!!filterDTO[prop]) {
+                    if (["id"].includes(prop) && filterDTO[prop]) {
+                        Reflect.set(filter, prop, filterDTO[prop]);
+                    } else if (["title", "description"].includes(prop)) {
+                        Reflect.set(filter, prop, ILike(`${filterDTO[prop]}%`));
+                    }
+                }
+            }
+            let [surveys, total] = await this.surveyRepository
+                .createQueryBuilder()
+                .where(filter)
+                .take(count)
+                .skip(offset)
+                .getManyAndCount();
+            if (!isNaN(latitude) && !isNaN(longitude)) {
+                surveys = surveys?.filter(survey => {
+                    const point = turf.point([longitude, latitude]);
+                    for (const feature of survey.area.features) {
+                        const polygon = turf.polygon(feature.geometry.coordinates);
+                        if (turf.booleanPointInPolygon(point, polygon)) {
+                            return true;
+                        }
+                    }
+                    total--;
+                    return false;
+                });
+            }
+            return [surveys, total];
+        } else {
+            return this.surveyRepository.findAndCount({
+                take: count,
+                skip: offset
+            });
+        }
     }
 
     async findOne(id: number): Promise<Survey> {

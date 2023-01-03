@@ -42,8 +42,23 @@ export class SurveysController {
     @Get()
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<ReadSurveyListDTO> {
-        const [surveys, total] = await this.surveysService.findAll(count || 10, offset || 0);
+    public async getAll(
+        @Query("count") count: number,
+        @Query("offset") offset: number,
+        @Query("id") id: number,
+        @Query("title") title: string,
+        @Query("description") description: string,
+        @Query("longitude") longitude: number,
+        @Query("latitude") latitude: number
+    ): Promise<ReadSurveyListDTO> {
+        const filterDTO = {
+            id,
+            title,
+            description,
+            latitude,
+            longitude
+        };
+        const [surveys, total] = await this.surveysService.findAll(count || 10, offset || 0, filterDTO);
         return {
             total: total,
             surveys: this.classMapper.mapArray(surveys, Survey, ReadSurveyDTO)

@@ -31,7 +31,10 @@ export class SurveysService {
                     }
                 }
             }
-            let builder = this.surveyRepository.createQueryBuilder("survey").where(filter);
+            let builder = this.surveyRepository
+                .createQueryBuilder("survey")
+                .leftJoinAndSelect("survey.form", "form")
+                .where(filter);
             if (available) {
                 builder = builder.andWhere(qb => {
                     const subQuery = qb

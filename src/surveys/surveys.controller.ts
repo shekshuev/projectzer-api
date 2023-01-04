@@ -25,6 +25,8 @@ import { Role } from "@/enums/role.enum";
 import { Roles } from "@/decorators/roles.decorator";
 import { ReadSurveyDTO } from "@/surveys/dto/read.dto";
 import { ReadSurveyListDTO } from "@/surveys/dto/read-list.dto";
+import { ReadAvailableSurveyDTO } from "@/surveys/dto/read-available.dto";
+import { ReadAvailableSurveyListDTO } from "./dto/read-list-available.dto";
 import { ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
 
 @ApiTags("surveys")
@@ -76,7 +78,7 @@ export class SurveysController {
     public async getAvailable(
         @Query("longitude") longitude: number,
         @Query("latitude") latitude: number
-    ): Promise<ReadSurveyListDTO> {
+    ): Promise<ReadAvailableSurveyListDTO> {
         const filterDTO = {
             id: null,
             title: null,
@@ -88,7 +90,7 @@ export class SurveysController {
         const [surveys, total] = await this.surveysService.findAll(-1, -1, filterDTO);
         return {
             total: total,
-            surveys: this.classMapper.mapArray(surveys, Survey, ReadSurveyDTO)
+            surveys: this.classMapper.mapArray(surveys, Survey, ReadAvailableSurveyDTO)
         };
     }
 

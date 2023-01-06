@@ -39,7 +39,7 @@ export class ResultsController {
         type: ReadResultListDTO
     })
     @Get()
-    @Roles(Role.Admin)
+    @Roles(Role.Interviewer)
     @UseGuards(JwtAuthGuard, RolesGuard)
     public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<ReadResultListDTO> {
         const [surveys, total] = await this.resultsService.findAll(count || 10, offset || 0);
@@ -56,7 +56,7 @@ export class ResultsController {
     })
     @ApiResponse({ status: 404, description: "No result with provided id" })
     @Get(":id")
-    @Roles(Role.Admin)
+    @Roles(Role.Interviewer)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @UseInterceptors(MapInterceptor(Result, ReadResultDTO))
     public async getById(@Param("id") id: number): Promise<ReadResultDTO> {
@@ -80,7 +80,7 @@ export class ResultsController {
     })
     @ApiResponse({ status: 400, description: "Wrong body" })
     @Post()
-    @Roles(Role.Admin)
+    @Roles(Role.Interviewer)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(MapInterceptor(Result, ReadResultDTO))

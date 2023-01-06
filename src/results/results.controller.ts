@@ -39,10 +39,25 @@ export class ResultsController {
         type: ReadResultListDTO
     })
     @Get()
-    @Roles(Role.Interviewer)
+    @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<ReadResultListDTO> {
-        const [surveys, total] = await this.resultsService.findAll(count || 10, offset || 0);
+    public async getAll(
+        @Query("count") count: number,
+        @Query("offset") offset: number,
+        @Query("id") id?: number,
+        @Query("surveyId") surveyId?: number,
+        @Query("accountId") accountId?: number,
+        @Query("beginDate") beginDate?: string,
+        @Query("endDate") endDate?: string
+    ): Promise<ReadResultListDTO> {
+        const filterDTO = {
+            id,
+            surveyId,
+            accountId,
+            beginDate,
+            endDate
+        };
+        const [surveys, total] = await this.resultsService.findAll(count || 10, offset || 0, filterDTO);
         return {
             total: total,
             results: this.classMapper.mapArray(surveys, Result, ReadResultDTO)
@@ -56,7 +71,7 @@ export class ResultsController {
     })
     @ApiResponse({ status: 404, description: "No result with provided id" })
     @Get(":id")
-    @Roles(Role.Interviewer)
+    @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @UseInterceptors(MapInterceptor(Result, ReadResultDTO))
     public async getById(@Param("id") id: number): Promise<ReadResultDTO> {

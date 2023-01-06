@@ -123,7 +123,7 @@ export class ResultsController {
     @Roles(Role.Interviewer)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.CREATED)
-    @UseInterceptors(MapInterceptor(Result, ReadResultDTO))
+    @UseInterceptors(MapInterceptor(Result, ReadPersonalResultDTO))
     public async create(@Body() createResultDTO: CreateResultDTO, @Request() request: any): Promise<ReadResultDTO> {
         try {
             createResultDTO.accountId = request?.user?.id;

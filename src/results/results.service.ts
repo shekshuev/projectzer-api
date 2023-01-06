@@ -57,11 +57,11 @@ export class ResultsService {
     }
 
     async create(createResultDTO: CreateResultDTO): Promise<Result> {
-        await this.surveyService.findOne(createResultDTO.surveyId);
+        const survey = await this.surveyService.findOne(createResultDTO.surveyId);
         await this.accountService.findOne(createResultDTO.accountId);
         const result = this.classMapper.map(createResultDTO, CreateResultDTO, Result);
         result.createdAt = new Date();
-        return await this.resultsRepository.save(result);
+        return { ...(await this.resultsRepository.save(result)), survey };
     }
 
     async remove(id: number): Promise<void> {

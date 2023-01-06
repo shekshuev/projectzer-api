@@ -11,7 +11,8 @@ import {
     HttpStatus,
     HttpCode,
     UseInterceptors,
-    UseGuards
+    UseGuards,
+    Request
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
@@ -48,6 +49,29 @@ export class AccountsController {
             total: total,
             accounts: this.classMapper.mapArray(accounts, Account, ReadAccountDTO)
         };
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: "Account object",
+        type: ReadAccountDTO
+    })
+    @Get("/self")
+    @Roles(Role.Interviewer)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(MapInterceptor(Account, ReadAccountDTO))
+    public async getSelfInfo(@Request() request: any): Promise<ReadAccountDTO> {
+        try {
+            return await this.accountsService.findOne(request?.user?.id);
+        } catch (e) {
+            throw new HttpException(
+                {
+                    status: HttpStatus.BAD_REQUEST,
+                    error: e.message
+                },
+                HttpStatus.BAD_REQUEST
+            );
+        }
     }
 
     @ApiResponse({

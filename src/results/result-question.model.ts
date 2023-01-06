@@ -1,9 +1,8 @@
 import { AutoMap } from "@automapper/classes";
-import { ValidateNested, IsOptional, IsDefined } from "class-validator";
+import { ValidateNested, IsOptional, IsDefined, IsArray } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
 import { Question } from "@/forms/question.model";
-import { ResultAnswer } from "@/results/result-answer.model";
 
 export class ResultQuestion {
     @ApiProperty({ type: Question })
@@ -13,20 +12,18 @@ export class ResultQuestion {
     @Type(() => Question)
     question: Question;
 
-    @ApiProperty({ type: ResultAnswer })
+    @ApiProperty()
     @AutoMap()
     @IsOptional()
-    @ValidateNested()
-    @Type(() => ResultAnswer)
-    selectedAnswer: ResultAnswer;
+    selectedAnswer: any;
 
     @ApiProperty()
     @AutoMap()
-    @IsDefined()
-    beginDate: Date;
+    @IsArray()
+    beginDates: [];
 
     @ApiProperty()
     @AutoMap()
-    @IsDefined()
-    endDate: Date;
+    @IsArray()
+    endDates: [];
 }

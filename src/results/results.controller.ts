@@ -18,6 +18,8 @@ import { Mapper } from "@automapper/core";
 import { CreateResultDTO } from "@/results/dto/create.dto";
 import { ReadResultDTO } from "@/results/dto/read.dto";
 import { ReadResultListDTO } from "@/results/dto/read-list.dto";
+import { ReadPersonalResultDTO } from "@/results/dto/read-personal.dto";
+import { ReadPersonalResultListDTO } from "@/results/dto/read-personal-list.dto";
 import { ResultsService } from "@/results/results.service";
 import { Result } from "@/results/result.entity";
 import { JwtAuthGuard } from "@/auth/jwt-auth.guard";
@@ -61,6 +63,29 @@ export class ResultsController {
         return {
             total: total,
             results: this.classMapper.mapArray(surveys, Result, ReadResultDTO)
+        };
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: "Object with list of results for current account and their total count",
+        type: ReadResultListDTO
+    })
+    @Get("/account")
+    @Roles(Role.Interviewer)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    public async getAllForAccount(@Request() request: any): Promise<ReadPersonalResultListDTO> {
+        const filterDTO = {
+            id: null,
+            surveyId: null,
+            accountId: request?.user?.id,
+            beginDate: null,
+            endDate: null
+        };
+        const [surveys, total] = await this.resultsService.findAll(-1, -1, filterDTO);
+        return {
+            total: total,
+            results: this.classMapper.mapArray(surveys, Result, ReadPersonalResultDTO)
         };
     }
 

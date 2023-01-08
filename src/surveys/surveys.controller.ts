@@ -11,7 +11,8 @@ import {
     HttpStatus,
     HttpCode,
     UseInterceptors,
-    UseGuards
+    UseGuards,
+    StreamableFile
 } from "@nestjs/common";
 import { MapInterceptor, InjectMapper } from "@automapper/nestjs";
 import { Mapper } from "@automapper/core";
@@ -28,6 +29,8 @@ import { ReadSurveyListDTO } from "@/surveys/dto/read-list.dto";
 import { ReadAvailableSurveyDTO } from "@/surveys/dto/read-available.dto";
 import { ReadAvailableSurveyListDTO } from "./dto/read-list-available.dto";
 import { ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { Buffer } from "buffer";
+import * as moment from "moment";
 
 @ApiTags("surveys")
 @ApiBearerAuth("Bearer")
@@ -92,6 +95,42 @@ export class SurveysController {
             total: total,
             surveys: this.classMapper.mapArray(surveys, Survey, ReadAvailableSurveyDTO)
         };
+    }
+
+    @ApiResponse({
+        status: 200,
+        description: "Survey object",
+        type: ReadSurveyDTO
+    })
+    @ApiResponse({ status: 404, description: "No survey with provided id" })
+    @Get("/export")
+    @Roles(Role.Admin)
+    @UseGuards(JwtAuthGuard, RolesGuard)
+    public async exportFileById(
+        @Query("id") id: number,
+        @Query("title") title: string,
+        @Query("description") description: string,
+        @Query("longitude") longitude: number,
+        @Query("latitude") latitude: number
+    ): Promise<StreamableFile> {
+        const filterDTO = {
+            id,
+            title,
+            description,
+            latitude,
+            longitude
+        };
+        const [surveys, total] = await this.surveysService.findAll(-1, -1, filterDTO);
+        const buffer = Buffer.from(
+            JSON.stringify({
+                total: total,
+                surveys: this.classMapper.mapArray(surveys, Survey, ReadAvailableSurveyDTO)
+            }),
+            "utf8"
+        );
+        return new StreamableFile(buffer, {
+            disposition: `attachment; filename="export-${moment().format("DD-MM-YYYY-HH-mm-ss")}.json`
+        });
     }
 
     @ApiResponse({

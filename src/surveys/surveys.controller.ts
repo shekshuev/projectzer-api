@@ -99,10 +99,9 @@ export class SurveysController {
 
     @ApiResponse({
         status: 200,
-        description: "Survey object",
+        description: "JSON file with list of surveys",
         type: ReadSurveyDTO
     })
-    @ApiResponse({ status: 404, description: "No survey with provided id" })
     @Get("/export")
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)

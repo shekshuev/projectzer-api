@@ -133,6 +133,7 @@ export class AccountsController {
     @Put(":id")
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
+    @UseInterceptors(MapInterceptor(Account, ReadAccountDTO))
     public async update(
         @Param("id") id: number,
         @Body() updateAccountDTO: UpdateAccountDTO

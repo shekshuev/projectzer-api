@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsDefined, IsDateString, IsNumber, ValidateNested, Min } from "class-validator";
+import { IsNotEmpty, IsDefined, IsDateString, IsNumber, ValidateNested, Min, IsOptional } from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
 import { FeatureCollection } from "@/geojson/feature-collection";
@@ -24,6 +24,7 @@ export class CreateSurveyDTO {
 
     @ApiProperty()
     @AutoMap()
+    @IsOptional()
     description: string;
 
     @ApiProperty()

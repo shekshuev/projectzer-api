@@ -1,5 +1,5 @@
 import { AutoMap } from "@automapper/classes";
-import { IsNotEmpty, MinLength, MaxLength, IsIn } from "class-validator";
+import { IsNotEmpty, MinLength, MaxLength, IsIn, IsOptional } from "class-validator";
 import { ApiProperty } from "@nestjs/swagger";
 import { Role } from "@/enums/role.enum";
 
@@ -13,11 +13,13 @@ export class CreateAccountDTO {
 
     @ApiProperty({ required: false })
     @AutoMap()
-    firstName?: string;
+    @IsOptional()
+    firstName: string;
 
     @ApiProperty({ required: false })
     @AutoMap()
-    lastName?: string;
+    @IsOptional()
+    lastName: string;
 
     @ApiProperty({ enum: [Role.Admin, Role.Interviewer] })
     @AutoMap()

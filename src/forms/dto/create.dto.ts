@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsArray, ValidateNested } from "class-validator";
+import { IsNotEmpty, IsArray, ValidateNested, IsOptional } from "class-validator";
 import { AutoMap } from "@automapper/classes";
 import { ApiProperty } from "@nestjs/swagger";
 import { Question } from "@/forms/question.model";
@@ -12,6 +12,7 @@ export class CreateFormDTO {
 
     @ApiProperty()
     @AutoMap()
+    @IsOptional()
     description: string;
 
     @ApiProperty({ type: [Question] })

@@ -47,7 +47,7 @@ export class AccountsController {
         @Query("count") count: number,
         @Query("offset") offset: number,
         @Query("id") id?: number,
-        @Query("surveyId") name?: string
+        @Query("name") name?: string
     ): Promise<ReadAccountListDTO> {
         const filterDTO = {
             id,

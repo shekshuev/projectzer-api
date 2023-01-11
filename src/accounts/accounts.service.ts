@@ -50,8 +50,8 @@ export class AccountsService implements OnModuleInit {
                 if (["id", "role"].includes(prop)) {
                     filter.push({ [`${prop}`]: filterDTO[prop] });
                 } else if (prop === "name") {
-                    filter.push({ firstName: ILike(filterDTO[prop]) });
-                    filter.push({ lastName: ILike(filterDTO[prop]) });
+                    filter.push({ firstName: ILike(`${filterDTO[prop]}%`) });
+                    filter.push({ lastName: ILike(`${filterDTO[prop]}%`) });
                 }
             }
         }

@@ -22,4 +22,8 @@ export class ReadAccountDTO {
     @ApiProperty({ enum: [Role.Admin, Role.Interviewer] })
     @AutoMap()
     role: string;
+
+    @ApiProperty()
+    @AutoMap()
+    resultsCount?: number;
 }

@@ -21,7 +21,7 @@ export class Result {
     surveyId: number;
 
     @AutoMap()
-    @ManyToOne(() => Account)
+    @ManyToOne(() => Account, account => account.results)
     @JoinColumn()
     account: Account;
 

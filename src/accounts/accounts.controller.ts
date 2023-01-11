@@ -43,8 +43,17 @@ export class AccountsController {
     @Get()
     @Roles(Role.Admin)
     @UseGuards(JwtAuthGuard, RolesGuard)
-    public async getAll(@Query("count") count: number, @Query("offset") offset: number): Promise<ReadAccountListDTO> {
-        const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0);
+    public async getAll(
+        @Query("count") count: number,
+        @Query("offset") offset: number,
+        @Query("id") id?: number,
+        @Query("surveyId") name?: string
+    ): Promise<ReadAccountListDTO> {
+        const filterDTO = {
+            id,
+            name
+        };
+        const [accounts, total] = await this.accountsService.findAll(count || 10, offset || 0, filterDTO);
         return {
             total: total,
             accounts: this.classMapper.mapArray(accounts, Account, ReadAccountDTO)

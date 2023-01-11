@@ -1,6 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
 import { AutoMap } from "@automapper/classes";
-
+import { Result } from "@/results/result.entity";
 @Entity()
 export class Account {
     @AutoMap()
@@ -25,4 +25,7 @@ export class Account {
 
     @Column()
     passwordHash: string;
+
+    @OneToMany(() => Result, result => result.account)
+    results: Result[];
 }

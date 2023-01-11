@@ -1,6 +1,6 @@
 import { Injectable, OnModuleInit, Logger } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
+import { Repository, ILike } from "typeorm";
 import { Account } from "@/accounts/account.entity";
 import { CreateAccountDTO } from "@/accounts/dto/create.dto";
 import { UpdateAccountDTO } from "@/accounts/dto/update.dto";
@@ -9,6 +9,7 @@ import { Mapper } from "@automapper/core";
 import { CryptoService } from "@/crypto/crypto.service";
 import { Role } from "@/enums/role.enum";
 import { ConfigService } from "@nestjs/config";
+import { FilterAccountDTO } from "@/accounts/dto/filter.dto";
 
 @Injectable()
 export class AccountsService implements OnModuleInit {
@@ -42,19 +43,45 @@ export class AccountsService implements OnModuleInit {
         }
     }
 
-    async findAll(count: number, offset: number): Promise<[Account[], number]> {
-        return this.accountsRepository.findAndCount({
-            take: count,
-            skip: offset
-        });
+    async findAll(count: number, offset: number, filterDTO?: FilterAccountDTO): Promise<[Account[], number]> {
+        const filter = [];
+        for (const prop in filterDTO) {
+            if (!!filterDTO[prop] || typeof filterDTO[prop] === "boolean") {
+                if (["id", "role"].includes(prop)) {
+                    filter.push({ [`${prop}`]: filterDTO[prop] });
+                } else if (prop === "name") {
+                    filter.push({ firstName: ILike(filterDTO[prop]) });
+                    filter.push({ lastName: ILike(filterDTO[prop]) });
+                }
+            }
+        }
+        let builder = this.accountsRepository
+            .createQueryBuilder("account")
+            .leftJoinAndSelect("account.results", "result")
+            .where(filter);
+        if (count > 0) {
+            builder = builder.take(count);
+        }
+        if (offset > 0) {
+            builder = builder.skip(offset);
+        }
+        return await builder.getManyAndCount();
     }
 
     async findOne(id: number): Promise<Account> {
-        return this.accountsRepository.findOneByOrFail({ id: id });
+        return this.accountsRepository
+            .createQueryBuilder("account")
+            .leftJoinAndSelect("account.results", "result")
+            .where({ id: id })
+            .getOneOrFail();
     }
 
     async findOneByUserName(userName: string): Promise<Account> {
-        return this.accountsRepository.findOneByOrFail({ userName });
+        return this.accountsRepository
+            .createQueryBuilder("account")
+            .leftJoinAndSelect("account.results", "result")
+            .where({ userName })
+            .getOneOrFail();
     }
 
     async create(createAccountDTO: CreateAccountDTO): Promise<Account> {
@@ -83,7 +110,8 @@ export class AccountsService implements OnModuleInit {
                     account.passwordHash = await this.cryptoService.hashPassword(updateAccountDTO.password);
                 }
             }
-            return await this.accountsRepository.save(account);
+            await this.accountsRepository.save(account);
+            return await this.findOne(account.id);
         }
     }
 

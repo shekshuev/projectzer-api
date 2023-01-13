@@ -99,8 +99,6 @@ export class AccountsService implements OnModuleInit {
     async update(id: number, updateAccountDTO: UpdateAccountDTO): Promise<Account> {
         if (updateAccountDTO.password !== updateAccountDTO.confirmPassword) {
             throw Error("Passwords doesn't match!");
-        } else if (updateAccountDTO.role && !["admin", "interviewer"].includes(updateAccountDTO.role)) {
-            throw Error("Wrong account role!");
         } else {
             const account = await this.accountsRepository.findOneByOrFail({ id: id });
             for (const prop in updateAccountDTO) {

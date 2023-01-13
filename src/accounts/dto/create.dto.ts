@@ -21,10 +21,10 @@ export class CreateAccountDTO {
     @IsOptional()
     lastName: string;
 
-    @ApiProperty({ enum: [Role.Admin, Role.Interviewer] })
+    @ApiProperty({ enum: [Role.Root, Role.Admin, Role.Interviewer] })
     @AutoMap()
     @IsNotEmpty()
-    @IsIn([Role.Admin, Role.Interviewer])
+    @IsIn([Role.Root, Role.Admin, Role.Interviewer])
     role: string;
 
     @ApiProperty({ minLength: 5, maxLength: 30 })

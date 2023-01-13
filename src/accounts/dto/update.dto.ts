@@ -21,9 +21,9 @@ export class UpdateAccountDTO {
     @IsOptional()
     lastName?: string;
 
-    @ApiProperty({ required: false, enum: [Role.Admin, Role.Interviewer] })
+    @ApiProperty({ required: false, enum: [Role.Root, Role.Admin, Role.Interviewer] })
     @AutoMap()
-    @IsIn([Role.Admin, Role.Interviewer])
+    @IsIn([Role.Root, Role.Admin, Role.Interviewer])
     @IsOptional()
     role?: string;
 

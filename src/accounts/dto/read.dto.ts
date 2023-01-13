@@ -19,7 +19,7 @@ export class ReadAccountDTO {
     @AutoMap()
     lastName: string;
 
-    @ApiProperty({ enum: [Role.Admin, Role.Interviewer] })
+    @ApiProperty({ enum: [Role.Root, Role.Admin, Role.Interviewer] })
     @AutoMap()
     role: string;
 

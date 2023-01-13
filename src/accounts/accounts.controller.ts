@@ -114,7 +114,7 @@ export class AccountsController {
     })
     @ApiResponse({ status: 400, description: "Wrong body" })
     @Post()
-    @Roles(Role.Admin)
+    @Roles(Role.Root)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(MapInterceptor(Account, ReadAccountDTO))
@@ -140,7 +140,7 @@ export class AccountsController {
     @ApiResponse({ status: 400, description: "Wrong body" })
     @ApiResponse({ status: 404, description: "No account with provided id" })
     @Put(":id")
-    @Roles(Role.Admin)
+    @Roles(Role.Root)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @UseInterceptors(MapInterceptor(Account, ReadAccountDTO))
     public async update(
@@ -163,7 +163,7 @@ export class AccountsController {
     @ApiResponse({ status: 204, description: "Account deleted" })
     @ApiResponse({ status: 404, description: "No account with provided id" })
     @Delete(":id")
-    @Roles(Role.Admin)
+    @Roles(Role.Root)
     @UseGuards(JwtAuthGuard, RolesGuard)
     @HttpCode(HttpStatus.NO_CONTENT)
     public async delete(@Param("id") id: number): Promise<void> {

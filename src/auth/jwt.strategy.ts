@@ -17,7 +17,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     async validate(payload: any) {
         const { role, ...rest } = payload;
         const roles = [role];
-        if (role === Role.Admin) {
+        if (role === Role.Root) {
+            roles.push(Role.Admin);
+            roles.push(Role.Interviewer);
+        } else if (role === Role.Admin) {
             roles.push(Role.Interviewer);
         }
         return {

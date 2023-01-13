@@ -25,14 +25,14 @@ export class AccountsService implements OnModuleInit {
 
     async onModuleInit() {
         try {
-            await this.accountsRepository.findOneByOrFail({ role: Role.Admin });
+            await this.accountsRepository.findOneByOrFail({ role: Role.Root });
             this.logger.log("Database has at least one admin account");
         } catch {
             const createAccountDTO: CreateAccountDTO = {
                 userName: this.configService.get<string>("ADMIN_DEFAULT_USERNAME"),
                 firstName: this.configService.get<string>("ADMIN_DEFAULT_FIRSTNAME"),
                 lastName: this.configService.get<string>("ADMIN_DEFAULT_LASTNAME"),
-                role: Role.Admin,
+                role: Role.Root,
                 password: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD"),
                 confirmPassword: this.configService.get<string>("ADMIN_DEFAULT_PASSWORD")
             };

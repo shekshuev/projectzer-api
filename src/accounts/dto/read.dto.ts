@@ -26,4 +26,10 @@ export class ReadAccountDTO {
     @ApiProperty()
     @AutoMap()
     resultsCount?: number;
+
+    @AutoMap()
+    createdAt: Date;
+
+    @AutoMap()
+    updatedAt: Date;
 }

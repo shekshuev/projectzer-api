@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn, OneToMany } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, OneToMany, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { Result } from "@/results/result.entity";
 @Entity()
@@ -28,4 +28,12 @@ export class Account {
 
     @OneToMany(() => Result, result => result.account)
     results: Result[];
+
+    @AutoMap()
+    @CreateDateColumn({ type: "timestamp" })
+    createdAt: Date;
+
+    @AutoMap()
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
 }

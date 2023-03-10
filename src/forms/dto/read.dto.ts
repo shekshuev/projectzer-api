@@ -9,10 +9,6 @@ export class ReadFormDTO {
 
     @ApiProperty()
     @AutoMap()
-    createdAt: Date;
-
-    @ApiProperty()
-    @AutoMap()
     title: string;
 
     @ApiProperty()
@@ -22,4 +18,12 @@ export class ReadFormDTO {
     @ApiProperty({ type: [Question] })
     @AutoMap(() => [Question])
     questions: Question[];
+
+    @ApiProperty()
+    @AutoMap()
+    createdAt: Date;
+
+    @ApiProperty()
+    @AutoMap()
+    updatedAt: Date;
 }

@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { Question } from "@/forms/question.model";
 
@@ -7,9 +7,6 @@ export class Form {
     @AutoMap()
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({ nullable: false })
-    createdAt: Date;
 
     @AutoMap()
     @Column({ nullable: false, unique: false })
@@ -22,4 +19,12 @@ export class Form {
     @AutoMap(() => [Question])
     @Column("jsonb", { nullable: true })
     questions: Question[];
+
+    @AutoMap()
+    @CreateDateColumn({ type: "timestamp" })
+    createdAt: Date;
+
+    @AutoMap()
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
 }

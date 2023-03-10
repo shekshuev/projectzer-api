@@ -26,9 +26,7 @@ export class FormsService {
     }
 
     async create(createFormDTO: CreateFormDTO): Promise<Form> {
-        const form = this.classMapper.map(createFormDTO, CreateFormDTO, Form);
-        form.createdAt = new Date();
-        return await this.formsRepository.save(form);
+        return await this.formsRepository.save(this.classMapper.map(createFormDTO, CreateFormDTO, Form));
     }
 
     async update(id: number, updateFormDTO: UpdateFormDTO): Promise<Form> {

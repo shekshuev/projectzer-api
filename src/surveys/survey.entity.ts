@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn, OneToMany } from "typeorm";
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    JoinColumn,
+    OneToMany,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { FeatureCollection } from "@/geojson/feature-collection";
 import { Form } from "@/forms/form.entity";
@@ -9,9 +18,6 @@ export class Survey {
     @AutoMap()
     @PrimaryGeneratedColumn()
     id: number;
-
-    @Column({ nullable: false })
-    createdAt: Date;
 
     @AutoMap()
     @Column({ nullable: false })
@@ -48,4 +54,12 @@ export class Survey {
 
     @OneToMany(() => Result, result => result.survey)
     results: Result[];
+
+    @AutoMap()
+    @CreateDateColumn({ type: "timestamp" })
+    createdAt: Date;
+
+    @AutoMap()
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
 }

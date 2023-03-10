@@ -10,10 +10,6 @@ export class ReadAvailableSurveyDTO {
 
     @ApiProperty()
     @AutoMap()
-    createdAt: Date;
-
-    @ApiProperty()
-    @AutoMap()
     beginDate: Date;
 
     @ApiProperty()
@@ -39,4 +35,12 @@ export class ReadAvailableSurveyDTO {
     @ApiProperty({ type: FeatureCollection })
     @AutoMap()
     area: FeatureCollection;
+
+    @ApiProperty()
+    @AutoMap()
+    createdAt: Date;
+
+    @ApiProperty()
+    @AutoMap()
+    updatedAt: Date;
 }

@@ -6,13 +6,12 @@ import { SurveysController } from "@/surveys/surveys.controller";
 import { AutomapperModule } from "@automapper/nestjs";
 import { SurveyProfile } from "@/surveys/automapper.profile";
 import { FormsModule } from "@/forms/forms.module";
-import { FormsService } from "@/forms/forms.service";
 import { Form } from "@/forms/form.entity";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Survey, Form]), AutomapperModule, FormsModule],
-    exports: [TypeOrmModule, FormsService],
-    providers: [SurveysService, SurveyProfile, FormsService],
+    exports: [TypeOrmModule, FormsModule, SurveysService],
+    providers: [SurveysService, SurveyProfile],
     controllers: [SurveysController]
 })
 export class SurveysModule {}

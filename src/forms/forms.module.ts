@@ -8,7 +8,7 @@ import { FormsProfile } from "@/forms/automapper.profile";
 
 @Module({
     imports: [TypeOrmModule.forFeature([Form]), AutomapperModule],
-    exports: [TypeOrmModule],
+    exports: [TypeOrmModule, FormsService],
     providers: [FormsService, FormsProfile],
     controllers: [FormsController]
 })

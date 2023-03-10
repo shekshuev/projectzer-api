@@ -38,4 +38,12 @@ export class ReadResultDTO {
     @AutoMap(() => [ResultQuestion])
     @Type(() => ResultQuestion)
     questions: ResultQuestion[];
+
+    @ApiProperty()
+    @AutoMap()
+    createdAt: Date;
+
+    @ApiProperty()
+    @AutoMap()
+    updatedAt: Date;
 }

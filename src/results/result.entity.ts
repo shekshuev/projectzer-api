@@ -1,4 +1,12 @@
-import { Column, Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from "typeorm";
+import {
+    Column,
+    Entity,
+    PrimaryGeneratedColumn,
+    ManyToOne,
+    JoinColumn,
+    CreateDateColumn,
+    UpdateDateColumn
+} from "typeorm";
 import { AutoMap } from "@automapper/classes";
 import { Survey } from "@/surveys/survey.entity";
 import { Feature } from "@/geojson/feature";
@@ -29,9 +37,6 @@ export class Result {
     @Column({ nullable: false })
     accountId: number;
 
-    @Column({ nullable: false })
-    createdAt: Date;
-
     @AutoMap()
     @Column({ nullable: false })
     beginDate: Date;
@@ -51,4 +56,12 @@ export class Result {
     @AutoMap(() => [ResultQuestion])
     @Column("jsonb", { nullable: false })
     questions: ResultQuestion[];
+
+    @AutoMap()
+    @CreateDateColumn({ type: "timestamp" })
+    createdAt: Date;
+
+    @AutoMap()
+    @UpdateDateColumn({ type: "timestamp" })
+    updatedAt: Date;
 }

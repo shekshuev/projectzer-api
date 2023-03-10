@@ -84,9 +84,7 @@ export class SurveysService {
 
     async create(createSurveyDto: CreateSurveyDTO): Promise<Survey> {
         await this.formService.findOne(createSurveyDto.formId);
-        const survey = this.classMapper.map(createSurveyDto, CreateSurveyDTO, Survey);
-        survey.createdAt = new Date();
-        return await this.surveyRepository.save(survey);
+        return await this.surveyRepository.save(this.classMapper.map(createSurveyDto, CreateSurveyDTO, Survey));
     }
 
     async update(id: number, updateSurveyDTO: UpdateSurveyDTO): Promise<Survey> {

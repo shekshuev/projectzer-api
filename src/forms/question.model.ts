@@ -1,6 +1,15 @@
 import { AutoMap } from "@automapper/classes";
 import { QuestionType } from "@/enums/question.enum";
-import { IsNotEmpty, IsIn, IsBoolean, IsArray, ArrayMinSize, ValidateNested } from "class-validator";
+import {
+    IsNotEmpty,
+    IsIn,
+    IsBoolean,
+    IsArray,
+    ArrayMinSize,
+    ValidateNested,
+    IsOptional,
+    IsPositive
+} from "class-validator";
 import { Answer } from "@/forms/answer.model";
 import { ApiProperty } from "@nestjs/swagger";
 import { Type } from "class-transformer";
@@ -16,6 +25,16 @@ export class Question {
     @IsNotEmpty()
     @IsIn([QuestionType.Multiple, QuestionType.Single, QuestionType.Open])
     type: string;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsPositive()
+    minCount?: number;
+
+    @ApiProperty()
+    @IsOptional()
+    @IsPositive()
+    maxCount?: number;
 
     @ApiProperty()
     @AutoMap()

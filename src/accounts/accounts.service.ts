@@ -87,8 +87,6 @@ export class AccountsService implements OnModuleInit {
     async create(createAccountDTO: CreateAccountDTO): Promise<Account> {
         if (createAccountDTO.password !== createAccountDTO.confirmPassword) {
             throw Error("Passwords doesn't match!");
-        } else if (!["admin", "interviewer"].includes(createAccountDTO.role)) {
-            throw Error("Wrong account role!");
         } else {
             const account = this.classMapper.map(createAccountDTO, CreateAccountDTO, Account);
             account.passwordHash = await this.cryptoService.hashPassword(createAccountDTO.password);

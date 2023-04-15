@@ -48,4 +48,11 @@ export class Question {
     @ValidateNested({ each: true })
     @Type(() => Answer)
     answers: Answer[];
+
+    @ApiProperty({ type: [String] })
+    @AutoMap()
+    @IsArray()
+    @IsOptional()
+    @Type(() => String)
+    isIgnore: string[] | null;
 }

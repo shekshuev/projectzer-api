@@ -82,6 +82,12 @@ export class SurveysController {
         @Query("longitude") longitude: number,
         @Query("latitude") latitude: number
     ): Promise<ReadAvailableSurveyListDTO> {
+        if (isNaN(latitude) || isNaN(longitude)) {
+            return {
+                total: 0,
+                surveys: []
+            };
+        }
         const filterDTO = {
             id: null,
             title: null,
